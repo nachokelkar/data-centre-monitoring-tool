@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, json, url_for
+from flask import Flask, render_template, request, json, url_for, send_file
 import ecks
+import subprocess
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
@@ -7,6 +8,12 @@ app.config['SECRET_KEY'] = 'secret'
 @app.route('/')
 def index():
     return render_template("table.html")
+
+# @app.route('/scan')
+# def pingscan():
+#     ip_out = subprocess.check_output("ifconfig")
+#     ip = ip_out.find("inet")
+#     return render_template("scan.html")
 
 @app.route('/check', methods=["POST"])
 def check():
@@ -32,5 +39,10 @@ def check():
 
         return json.dumps({"success":"True", "message":toflash}),200,{'ContentType':'application/json'}
     
+@app.route('/download')
+def download():
+    path = "diskdata.txt"
+    return send_file(path)
+
 if __name__ == '__main__':
     app.run(debug = True)
