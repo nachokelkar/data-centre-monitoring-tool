@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ "$1" = "start" ]
+then
+    sudo python2 snmpdaemon.py start
+    echo 'SNMP daemon RUNNING'
+    sudo python2 pingdaemon.py start
+    echo 'Ping daemon RUNNING'
+elif [ "$1" = "stop" ]
+then
+    sudo python2 snmpdaemon.py stop
+    echo 'SNMP daemon STOPPED'
+    sudo python2 pingdaemon.py stop
+    echo 'Ping daemon STOPPED'
+elif [ "$1" = "restart" ]
+then
+    sudo python2 snmpdaemon.py restart
+    echo 'SNMP daemon RESTARTED'
+    sudo python2 pingdaemon.py restart
+    echo 'Ping daemon RESTARTED'
+else
+    echo 'Usage: ./daemon.sh [start|stop|restart]'
+fi
