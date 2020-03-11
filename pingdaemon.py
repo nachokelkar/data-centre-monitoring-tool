@@ -22,7 +22,7 @@ class MyDaemon(Daemon):
                 for i in ips:
                     # Running ping command
                     # response will hold 0 if successful
-                    response = os.system("ping -n 1 -w 10 " +i)
+                    response = os.system("ping -c 1 -w 10 " +i)
                     pingfile.write(i +"\t" +str(response == 0) +"\n")
                 
                 pingfile.close()
