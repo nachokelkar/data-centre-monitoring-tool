@@ -1,4 +1,8 @@
 dumps
 ping.txt
-snmp.txt
+ssh.txt
+cpudata.txt
+uptdata.txt
+dskdata.txt
+memdata.txt
 daemon.pyc
