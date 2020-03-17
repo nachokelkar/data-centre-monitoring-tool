@@ -1,60 +1,66 @@
-import sys, time
+import sys
+import time
 from daemon import Daemon
 from datetime import datetime
 import os
 import paramiko
 from paramiko import BadHostKeyException, AuthenticationException, SSHException
 
+
 class MyDaemon(Daemon):
-        def run(self):
-            # All input is read from an input file
-            # Format of the file is specified in the file itself
-            inputfile = open("/home/pranav/Work/MiniProject/data-centre-monitoring-tool/input.txt", "r")
-            
-            ips = list()
-            unames = list()
-            pwds = list()
+    def run(self):
+        # All input is read from an input file
+        # Format of the file is specified in the file itself
+        inputfile = open(os.path.join(sys.path[0], "input.txt"), "r")
 
-            for i, line in enumerate(inputfile):
-                if i==5: # Line 6 contains update frequency for the data
-                    updatefreq = int(line)
-                elif i==6: # Line 7 contais timeout 
-                    timeout = line
-                elif i>=8 and i%4==0: # Each line with lineno%4==1 contains an IP address
-                    ips.append(line.strip())
-                elif i>=8 and i%4==1: # Each line with lineno%4==1 contains corresponding username for SSH
-                    unames.append(line.strip())
-                elif i>=8 and i%4==2: # Each line with lineno%4==1 contains corresponding password for SSH
-                    pwds.append(line.strip())
+        ips = list()
+        unames = list()
+        pwds = list()
 
-            while True:
-                if ips:
-                    ssh = paramiko.SSHClient()
-                    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                    sshresults = list()
+        for i, line in enumerate(inputfile):
+            if i == 5:  # Line 6 contains update frequency for the data
+                updatefreq = int(line)
+            elif i == 6:  # Line 7 contais timeout
+                timeout = line
+            elif i >= 8 and i % 4 == 0:  # Each line with lineno%4==1 contains an IP address
+                ips.append(line.strip())
+            elif i >= 8 and i % 4 == 1:  # Each line with lineno%4==1 contains corresponding username for SSH
+                unames.append(line.strip())
+            elif i >= 8 and i % 4 == 2:  # Each line with lineno%4==1 contains corresponding password for SSH
+                pwds.append(line.strip())
 
-                    for i in range(len(ips)):
-                        try:
-                            ssh.connect(ips[i], username=unames[i], password=pwds[i], timeout=int(timeout))
-                            sshresults.append(ips[i].strip() +"\tTrue\n")
-                        
-                        except (BadHostKeyException, AuthenticationException, 
-                                SSHException) as e:
-                            sshresults.append(ips[i].strip() +"\tFalse: " +e +"\n")
-                    
-                    sshfile = open("/home/pranav/Work/MiniProject/data-centre-monitoring-tool/ssh.txt", "w")
-                    for result in sshresults:
-                        sshfile.write(result)
-                    sshfile.close()
+        while True:
+            if ips:
+                ssh = paramiko.SSHClient()
+                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                sshresults = list()
 
-                    # Delay
-                    time.sleep(updatefreq)
-                else:
-                    print("No input specified")
-                    sys.exit()
- 
-if __name__ == "__main__":
-    daemon = MyDaemon('/tmp/daemon3.pid', stderr="/home/pranav/Work/MiniProject/data-centre-monitoring-tool/dumps/ssherrors.txt", stdout="/home/pranav/Work/MiniProject/data-centre-monitoring-tool/dumps/sshoutput.txt")
+                for i in range(len(ips)):
+                    try:
+                        ssh.connect(ips[i], username=unames[i],
+                                    password=pwds[i], timeout=int(timeout))
+                        sshresults.append(ips[i].strip() + '\tTrue\n')
+
+                    except (BadHostKeyException, AuthenticationException,
+                            SSHException) as e:
+                        sshresults.append(
+                            ips[i].strip() + '\tFalse: ' + e + '\n')
+
+                sshfile = open(os.path.join(sys.path[0], '/ssh.txt', 'w'))
+                for result in sshresults:
+                    sshfile.write(result)
+                sshfile.close()
+
+                # Delay
+                time.sleep(updatefreq)
+            else:
+                print('No input specified')
+                sys.exit()
+
+
+if __name__ == '__main__':
+    daemon = MyDaemon('/tmp/daemon3.pid', stderr=os.path.join(
+        sys.path[0], 'dumps/ssherrors.txt'), stdout=os.path.join(sys.path[0], 'dumps/sshoutput.txt'))
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
             daemon.start()
@@ -63,9 +69,9 @@ if __name__ == "__main__":
         elif 'restart' == sys.argv[1]:
             daemon.restart()
         else:
-            print "Unknown command"
+            print 'Unknown command'
             sys.exit(2)
         sys.exit(0)
     else:
-        print "usage: %s start|stop|restart" % sys.argv[0]
+        print 'usage: %s start|stop|restart' % sys.argv[0]
         sys.exit(2)
