@@ -1,19 +1,12 @@
 import React from "react";
-import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
-import StarIcon from "@material-ui/icons/StarBorder";
-import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Box from "@material-ui/core/Box";
+import Server from "./Server";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -23,18 +16,6 @@ const useStyles = makeStyles(theme => ({
       listStyle: "none"
     }
   },
-  appBar: {
-    borderBottom: `1px solid ${theme.palette.divider}`
-  },
-  toolbar: {
-    flexWrap: "wrap"
-  },
-  toolbarTitle: {
-    flexGrow: 1
-  },
-  link: {
-    margin: theme.spacing(1, 1.5)
-  },
   heroContent: {
     padding: theme.spacing(8, 0, 6)
   },
@@ -43,67 +24,37 @@ const useStyles = makeStyles(theme => ({
       theme.palette.type === "dark"
         ? theme.palette.grey[700]
         : theme.palette.grey[200]
-  },
-  cardPricing: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "baseline",
-    marginBottom: theme.spacing(2)
-  },
-  footer: {
-    borderTop: `1px solid ${theme.palette.divider}`,
-    marginTop: theme.spacing(8),
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-    [theme.breakpoints.up("sm")]: {
-      paddingTop: theme.spacing(6),
-      paddingBottom: theme.spacing(6)
-    }
   }
 }));
 
 const tiers = [
   {
     title: "Rack 1",
-    price: "0",
-    description: [
-      "10 users included",
-      "2 GB of storage",
-      "Help center access",
-      "Email support"
-    ],
-    buttonText: "Server",
-    buttonVariant: "outlined"
+    servers: [
+      ["1", "r1_s1", "Ubuntu 18.04", "83"],
+      ["2", "r1_s2", "Windows 7", "83"],
+      ["3", "r1_s3", "Windows 10", "83"]
+    ]
   },
   {
     title: "Rack 2",
-    price: "0",
-    description: [
-      "10 users included",
-      "2 GB of storage",
-      "Help center access",
-      "Email support"
-    ],
-    buttonText: "Server",
-    buttonVariant: "outlined"
+    servers: [
+      ["1", "r1_s1", "Ubuntu 18.04", "83"],
+      ["2", "r1_s2", "Windows 10", "83"],
+      ["3", "r1_s3", "Windows 7", "83"]
+    ]
   },
   {
-    title: "Rack 2",
-    price: "0",
-    description: [
-      "10 users included",
-      "2 GB of storage",
-      "Help center access",
-      "Email support"
-    ],
-    buttonText: "Server",
-    buttonVariant: "outlined"
+    title: "Rack 3",
+    servers: [
+      ["1", "r1_s1", "Windows 10", "83"],
+      ["2", "r1_s2", "Ubuntu 18.04", "83"],
+      ["3", "r1_s3", "Windows 7", "83"]
+    ]
   }
 ];
-
 export default function Racks() {
   const classes = useStyles();
-
   return (
     <React.Fragment>
       {/* Hero unit */}
@@ -122,12 +73,7 @@ export default function Racks() {
       <Container maxWidth="md" component="main">
         <Grid container spacing={5} alignItems="flex-end">
           {tiers.map(tier => (
-            <Grid
-              item
-              key={tier.title}
-              xs={12}
-              md={4}
-            >
+            <Grid item key={tier.title} xs={12} md={4}>
               <Card>
                 <CardHeader
                   title={tier.title}
@@ -137,15 +83,11 @@ export default function Racks() {
                 />
                 <CardContent>
                   <ul>
-                    {tier.description.map(line => (
-                      <Button
-                        fullWidth
-                        variant={tier.buttonVariant}
-                        color="primary"
-                      >
-                        {tier.buttonText}
-                      </Button>
-                    ))}
+                    {tier.servers.map(server => 
+                        <React.Fragment>
+                          <Server cpu={server[3]} />
+                        </React.Fragment>
+                    )}
                   </ul>
                 </CardContent>
               </Card>
