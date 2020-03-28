@@ -11,7 +11,7 @@ class MyDaemon(Daemon):
     def run(self):
         # All input is read from an input file
         # Format of the file is specified in the file itself
-        inputfile = open(os.path.join(sys.path[0], "input.txt"), "r")
+        inputfile = open(os.path.join(sys.path[0], 'input.txt'), 'r')
 
         ips = list()
         unames = list()
@@ -46,7 +46,7 @@ class MyDaemon(Daemon):
                         sshresults.append(
                             ips[i].strip() + '\tFalse: ' + e + '\n')
 
-                sshfile = open(os.path.join(sys.path[0], '/ssh.txt', 'w'))
+                sshfile = open(os.path.join(sys.path[0], 'ssh.txt'), 'w')
                 for result in sshresults:
                     sshfile.write(result)
                 sshfile.close()

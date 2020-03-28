@@ -9,7 +9,7 @@ class MyDaemon(Daemon):
     def run(self):
         # All input is read from an input file
         # Format of the file is specified in the file itself
-        inputfile = open(os.path.join(sys.path[0], "input.txt"), 'r')
+        inputfile = open(os.path.join(sys.path[0], 'input.txt'), 'r')
 
         ips = list()  # Stores list of IP addresses
 
@@ -36,7 +36,7 @@ class MyDaemon(Daemon):
                                        str(response == 0) + '\n')
 
                 # Writing results of ping to a file
-                pingfile = open(os.path.join(sys.path[0], 'ping.txt', 'w'))
+                pingfile = open(os.path.join(sys.path[0], 'ping.txt'), 'w')
                 for result in pingresults:
                     pingfile.write(result)
                 pingfile.close()
@@ -50,7 +50,7 @@ class MyDaemon(Daemon):
 
 
 if __name__ == '__main__':
-    daemon = MyDaemon('/tmp/daemon2.pid', stderr=os.path.join(sys.path[0], 'pingerrors.txt'), stdout=os.path.join(sys.path[0], 'pingoutput.txt'))
+    daemon = MyDaemon('/tmp/daemon2.pid', stderr=os.path.join(sys.path[0], 'dumps/pingerrors.txt'), stdout=os.path.join(sys.path[0], 'dumps/pingoutput.txt'))
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
             daemon.start()
