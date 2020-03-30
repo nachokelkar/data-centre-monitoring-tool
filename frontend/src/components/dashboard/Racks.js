@@ -33,7 +33,7 @@ const tiers = [
     servers: [
       ["1", "r1_s1", "17.192.60.49", "Ubuntu 18.04", "83", "40"],
       ["2", "r1_s2", "235.206.163.213", "Windows 7", "76", "38"],
-      ["3", "r1_s3", "31.48.70.92","Windows 10", "49", "60"]
+      ["3", "r1_s3", "31.48.70.92", "Windows 10", "49", "60"]
     ]
   },
   {
@@ -41,7 +41,8 @@ const tiers = [
     servers: [
       ["1", "r1_s1", "249.8.152.227", "Ubuntu 18.04", "82", "61"],
       ["2", "r1_s2", "8.220.11.103", "Windows 10", "27", "93"],
-      ["3", "r1_s3", "38.192.127.154", "Windows 7", "44", "77"]
+      ["3", "r1_s3", "38.192.127.154", "Windows 7", "44", "77"],
+      ["3", "r1_s3", "22.74.368.15", "Ubuntu 16.04", "87", "37"]
     ]
   },
   {
@@ -71,7 +72,7 @@ export default function Racks() {
       </Container>
       {/* End hero unit */}
       <Container maxWidth="ls" component="main">
-        <Grid container spacing={5} alignItems="flex-end">
+        <Grid container spacing={5}>
           {tiers.map(tier => (
             <Grid item key={tier.title} xs={12} md={4}>
               <Card>
@@ -83,11 +84,16 @@ export default function Racks() {
                 />
                 <CardContent>
                   <ul>
-                    {tier.servers.map(server => 
-                        <React.Fragment>
-                          <Server ip={server[2]} cpu={server[4]} dsk={server[5]}/>
-                        </React.Fragment>
-                    )}
+                    {tier.servers.map(server => (
+                      <React.Fragment>
+                        <Server
+                          ip={server[2]}
+                          os={server[3]}
+                          cpu={server[4]}
+                          dsk={server[5]}
+                        />
+                      </React.Fragment>
+                    ))}
                   </ul>
                 </CardContent>
               </Card>
