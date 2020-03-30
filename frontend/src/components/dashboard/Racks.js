@@ -42,7 +42,7 @@ const tiers = [
       ["1", "r1_s1", "249.8.152.227", "Ubuntu 18.04", "82", "61"],
       ["2", "r1_s2", "8.220.11.103", "Windows 10", "27", "93"],
       ["3", "r1_s3", "38.192.127.154", "Windows 7", "44", "77"],
-      ["3", "r1_s3", "22.74.368.15", "Ubuntu 16.04", "87", "37"]
+      ["4", "r1_s4", "22.74.368.15", "Ubuntu 16.04", "87", "37"]
     ]
   },
   {
@@ -87,6 +87,7 @@ export default function Racks() {
                     {tier.servers.map(server => (
                       <React.Fragment>
                         <Server
+                          position={server[0]}
                           ip={server[2]}
                           os={server[3]}
                           cpu={server[4]}
