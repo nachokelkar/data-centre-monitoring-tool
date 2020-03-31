@@ -1,6 +1,10 @@
 import React from "react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
+import IconButton from "@material-ui/core/IconButton";
+import OpenInNewOutlined from "@material-ui/icons/OpenInNewOutlined";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -8,13 +12,14 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles } from "@material-ui/core/styles";
 
+
 const useStyles = makeStyles(theme => ({
   paper: {
     background: "#3e3e3e",
     color: "white",
-    height: 150,
+    height: 120,
     width: 335,
-    paddingTop: theme.spacing(3),
+    paddingTop: theme.spacing(1),
     paddingLeft: theme.spacing(2),
     marginBottom: theme.spacing(2)
     // paddingBottom: theme.spacing(3)
@@ -22,27 +27,91 @@ const useStyles = makeStyles(theme => ({
   position: {
     paddingRight: theme.spacing(3)
   },
+  margin: {
+    color: "white",
+    paddingRight: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
+    paddingTop: theme.spacing(0),
+    marginTop: theme.spacing(0)
+  }
 }));
+
+const emails = ["username@gmail.com", "user02@gmail.com"];
+
+function SimpleDialog(props) {
+  // const classes = useStyles();
+  const { onClose, selectedValue, open } = props;
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+
+  // const handleListItemClick = value => {
+  //   onClose(value);
+  // };
+
+  return (
+    <Dialog
+      onClose={handleClose}
+      aria-labelledby="simple-dialog-title"
+      open={open}
+    >
+      <DialogTitle id="simple-dialog-title">
+        Network Topology {"&"} Other Info
+      </DialogTitle>
+      <Paper>
+        -Network Topology
+        <br /> -ssh info
+      </Paper>
+    </Dialog>
+  );
+}
 
 export default function Racks(props) {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState(emails[1]);
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = value => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
   return (
     <React.Fragment>
-      <ExpansionPanel>
+      <ExpansionPanel expanded={props.expanded}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography variant="subtitle1" className={classes.position}>{props.position}.</Typography>
+          <Typography variant="subtitle1" className={classes.position}>
+            {props.position}.
+          </Typography>
           <Typography variant="subtitle1">{props.ip}</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Paper className={classes.paper} variant="outlined">
-            <Typography variant="subtitle1" color="inherit">
-              {props.os}
-            </Typography>
+            <Grid container>
+              <Grid item xs={10}>
+                <Typography variant="caption" color="inherit">
+                  {props.os}
+                </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <IconButton
+                  aria-label="open"
+                  className={classes.margin}
+                  onClick={handleClickOpen}
+                >
+                  <OpenInNewOutlined fontSize="small" />
+                </IconButton>
+              </Grid>
+            </Grid>
             <Grid container>
               <Grid item xs={3}>
                 <Typography variant="caption" color="inherit">
@@ -66,6 +135,11 @@ export default function Racks(props) {
           </Paper>
         </ExpansionPanelDetails>
       </ExpansionPanel>
+      <SimpleDialog
+        selectedValue={selectedValue}
+        open={open}
+        onClose={handleClose}
+      />
     </React.Fragment>
   );
 }

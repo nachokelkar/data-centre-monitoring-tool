@@ -71,8 +71,8 @@ export default function Racks() {
         </Typography>
       </Container>
       {/* End hero unit */}
-      <Container maxWidth="ls" component="main">
-        <Grid container spacing={5}>
+      <Container maxWidth="lg" component="main">
+        <Grid container spacing={2}>
           {tiers.map(tier => (
             <Grid item key={tier.title} xs={12} md={4}>
               <Card>
@@ -87,6 +87,7 @@ export default function Racks() {
                     {tier.servers.map(server => (
                       <React.Fragment>
                         <Server
+                          // expanded={true}
                           position={server[0]}
                           ip={server[2]}
                           os={server[3]}
