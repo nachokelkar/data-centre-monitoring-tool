@@ -19,8 +19,17 @@ Inputs must be in `inputs.txt` in the following format:
   * SSH password on the third line
   * Empty line
 
+## Initial setup for database
+The database must be set up according to the IP addresses.\
+HBase must be installed (https://hbase.apache.org/book.html#quickstart).\
+Once that is done, run `table_init.py` to create the tables and `table_clr.py` to delete tables.
+
 ## Usage
 * Create input file `input.txt` as above
+* Make sure HBase is running\
+(In HBase folder, `$ bin/start-hbase.sh`)
+* Thrift must be running on port 9090\
+(In HBase folder, `$ bin/hbase-daemon.sh start thrift -p 9090`)
 * To start daemon processes,\
   `$ ./daemon.sh start`
 * To stop daemon processes,\
@@ -29,13 +38,7 @@ Inputs must be in `inputs.txt` in the following format:
   `$ ./daemon.sh restart`
 * To start flask app,\
   `$ python flaskapp.py`
-* Outputs are stored as following:
-  * Ping check stored in `ping.txt` as `[IP address]\t[True|False]`
-  * SSH check stored in `ssh.txt` as `[IP address]\t[True|False]`
-  * CPU data stored in `cpudata.txt` as `[Timestamp]\t[IP address]\t[CPU Utilisation]`
-  * Memory data stored in `cpudata.txt` as `[Timestamp]\t[IP address]\t[Memory Utilisation]`
-  * Disk data stored in `cpudata.txt` as `[Timestamp]\t[IP address]\t[Disk Utilisation]`
-  * Uptime data stored in `cpudata.txt` as `[Timestamp]\t[IP address]\t[Uptime]`
+* Outputs are stored as in tables `'snmp'`, `'ping'` and `'ssh'` in HBase
 * Daemon output and errors stored in `/dumps`
 
 > ### Note on daemon files
@@ -43,7 +46,9 @@ Inputs must be in `inputs.txt` in the following format:
   This is done by changing the first parameter passed in the constructor function in `__main__`
 
 ### To-do
-- Topology display
-- Last logged in user
-- Total users on the system
-- Front-end
+* Last logged in (user, time)
+* Users on the systems (other than root)
+* Ansible (low priority)
+* Check out front-end
+* Check switch, router health (1)
+* Display log files (head, tail, entire file)

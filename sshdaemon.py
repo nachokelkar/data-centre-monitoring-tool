@@ -1,11 +1,10 @@
+import happybase
 import sys
 import time
-from daemon import Daemon
-from datetime import datetime
 import os
+from daemon import Daemon
 import paramiko
 from paramiko import BadHostKeyException, AuthenticationException, SSHException
-
 
 class MyDaemon(Daemon):
     def run(self):
@@ -29,27 +28,37 @@ class MyDaemon(Daemon):
             elif i >= 8 and i % 4 == 2:  # Each line with lineno%4==1 contains corresponding password for SSH
                 pwds.append(line.strip())
 
+        inputfile.close()
+
+        # Initialising SSH and HBase connection
+        conn = happybase.Connection('localhost', port=9090)
+        table = conn.table('ssh')
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
         while True:
             if ips:
-                ssh = paramiko.SSHClient()
-                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                sshresults = list()
+                # ssh = paramiko.SSHClient()
+                # ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                
+                sshresults = dict() # Stores SSH output
 
                 for i in range(len(ips)):
                     try:
                         ssh.connect(ips[i], username=unames[i],
                                     password=pwds[i], timeout=int(timeout))
-                        sshresults.append(ips[i].strip() + '\tTrue\n')
+                        sshresults[ips[i].strip()+':ssh'] = 'True'
 
                     except (BadHostKeyException, AuthenticationException,
                             SSHException) as e:
-                        sshresults.append(
-                            ips[i].strip() + '\tFalse: ' + e + '\n')
+                        sshresults[ips[i].strip()+':ssh'] = 'False: ' + e
 
-                sshfile = open(os.path.join(sys.path[0], 'ssh.txt'), 'w')
-                for result in sshresults:
-                    sshfile.write(result)
-                sshfile.close()
+                # Writes to database after deleting previous value
+                # Key = 'row', value = sshresults
+                conn.open()
+                table.delete('row')
+                table.put('row', sshresults)
+                conn.close()
 
                 # Delay
                 time.sleep(updatefreq)

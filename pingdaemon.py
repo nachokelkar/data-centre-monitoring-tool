@@ -1,8 +1,9 @@
+import happybase
 import sys
 import time
-from daemon import Daemon
-from datetime import datetime
 import os
+from daemon import Daemon
+import happybase
 
 
 class MyDaemon(Daemon):
@@ -24,22 +25,30 @@ class MyDaemon(Daemon):
                 # Stripping is done to remove trailing newlines
                 ips.append(line.strip())
 
+        inputfile.close()
+
+        # Initialising HBase connection
+        conn = happybase.Connection('localhost', port=9090)
+        table = conn.table('ping')
+
         while True:
             if ips:  # Run only if there are IP addresses in the file
-                pingresults = list()  # Stores results of the ping test
+                pingresults = dict()  # Stores results of the ping test
 
                 for i in ips:
                     # Running ping command
                     # response will hold 0 if successful, something else if it fails
                     response = os.system('ping -c 1 -w ' + timeout + ' ' + i)
-                    pingresults.append(i.strip() + '\t' +
-                                       str(response == 0) + '\n')
+                    
+                    # Adds result to the ping command
+                    pingresults[i.strip()+":ping"] = str(response == 0)
 
-                # Writing results of ping to a file
-                pingfile = open(os.path.join(sys.path[0], 'ping.txt'), 'w')
-                for result in pingresults:
-                    pingfile.write(result)
-                pingfile.close()
+                # Deleting previous output, putting new output into the database
+                # Key = 'row', Value = 'pingresults'
+                conn.open()
+                table.delete('row')
+                table.put('row', pingresults)
+                conn.close()
 
                 # Delay
                 time.sleep(updatefreq)
