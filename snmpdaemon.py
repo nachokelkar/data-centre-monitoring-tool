@@ -6,13 +6,14 @@ from daemon import Daemon
 from datetime import datetime
 import ecks
 
+
 class MyDaemon(Daemon):
     def run(self):
         # All input is read from an input file
         # Format of the file is specified in the file itself
         inputfile = open(os.path.join(sys.path[0], 'input.txt'), 'r')
 
-        ips = list() # Stores the IP addresses given in the input
+        ips = list()  # Stores the IP addresses given in the input
 
         for i, line in enumerate(inputfile):
             if i == 5:  # Line 6 contains update frequency for the data
@@ -29,8 +30,8 @@ class MyDaemon(Daemon):
 
         while True:
             if ips:
-                putdict = dict() # Stores the data that is to be put into the database
-                
+                putdict = dict()  # Stores the data that is to be put into the database
+
                 for i in ips:
                     # Getting data using Ecks
                     # Usage: e.get_data('ip address', 'group', 'data type')
@@ -42,12 +43,15 @@ class MyDaemon(Daemon):
                     upt_data = e.get_data(i, 'public', 'uptime')
                     # dsk_data is a list of tuples of the form (type, path, size in bytes, used bytes) for each block device
                     dsk_data = e.get_data(i, 'public', 'disk')
+                    # os_data returns the host operating system info
+                    os_data = e.get_data(i, 'public', 'os')
 
                     # Preparing the data for putting into the database
                     putdict[i+':cpu'] = str(cpu_data)
                     putdict[i+':memory'] = str(mem_data)
                     putdict[i+':disk'] = str(dsk_data)
                     putdict[i+':upt'] = str(upt_data)
+                    putdict[i+':os'] = str(os_data)
 
                 # Writing to database
                 # Key = timestamp during write
