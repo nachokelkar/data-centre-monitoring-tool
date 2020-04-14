@@ -1,11 +1,12 @@
 # INPUT FILE
 # Line 6 - Update frequency (in seconds)
 # Line 7 - Maximum allowed timeout for ping (in seconds)
-# Line 9+ - IP addresses with other details (per every line - ssh_username, ssh_pwd) followed by a space for every IP
+# Line 9+ - IP addresses with other details (per every line - IP address, rack number, ssh_username, ssh_pwd) followed by a space for every IP
 
 5
 10
 
 127.0.0.1
+1
 pranav
 wfte78ubuntu

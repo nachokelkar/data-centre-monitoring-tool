@@ -21,11 +21,11 @@ class MyDaemon(Daemon):
                 updatefreq = int(line)
             elif i == 6:  # Line 7 contais timeout
                 timeout = line
-            elif i >= 8 and i % 4 == 0:  # Each line with lineno%4==1 contains an IP address
+            elif i >= 8 and i % 5 == 3:  # Each line with lineno%4==1 contains an IP address
                 ips.append(line.strip())
-            elif i >= 8 and i % 4 == 1:  # Each line with lineno%4==1 contains corresponding username for SSH
+            elif i >= 8 and i % 5 == 0:  # Each line with lineno%4==1 contains corresponding username for SSH
                 unames.append(line.strip())
-            elif i >= 8 and i % 4 == 2:  # Each line with lineno%4==1 contains corresponding password for SSH
+            elif i >= 8 and i % 5 == 1:  # Each line with lineno%4==1 contains corresponding password for SSH
                 pwds.append(line.strip())
 
         inputfile.close()
@@ -47,11 +47,26 @@ class MyDaemon(Daemon):
                     try:
                         ssh.connect(ips[i], username=unames[i],
                                     password=pwds[i], timeout=int(timeout))
-                        sshresults[ips[i].strip()+':ssh'] = 'True'
+                        sshresults[ips[i]+':ssh'] = 'True'
+                        sshresults[ips[i]+':last'] = ""
+
+                        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("last -n 5")
+                        
+                        # -----------
+                        # CHANGE THIS
+                        # -----------
+
+                        for j in ssh_stdout:
+                            j = j.split(" ")
+                            if j[0] != "" and j[0] != "wtmp":
+                                sshresults[ips[i]+':last'] += j[0]
+
+                        # Thanks boi ly
 
                     except (BadHostKeyException, AuthenticationException,
                             SSHException) as e:
-                        sshresults[ips[i].strip()+':ssh'] = 'False: ' + e
+                        sshresults[ips[i]+':ssh'] = 'False: ' + e
+                        sshresults[ips[i]+":last"] = "Could not SSH"
 
                 # Writes to database after deleting previous value
                 # Key = 'row', value = sshresults

@@ -18,7 +18,7 @@ class MyDaemon(Daemon):
         for i, line in enumerate(inputfile):
             if i == 5:  # Line 6 contains update frequency for the data
                 updatefreq = int(line)
-            elif i >= 8 and i % 4 == 0:  # Each line with lineno%4==1 contains an IP address
+            elif i >= 8 and i % 5 == 3:  # Each line with lineno%4==1 contains an IP address
                 ips.append(line.strip())
 
         inputfile.close()

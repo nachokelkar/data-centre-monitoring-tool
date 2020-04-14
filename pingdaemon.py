@@ -21,10 +21,10 @@ class MyDaemon(Daemon):
             elif i == 6:  # Line 7 contains timeout for the ping
                 # Timeout is set as a string and not converted to an int because it isn't required
                 timeout = line.strip()
-            elif i >= 8 and i % 4 == 0:  # Each line with lineno%4==1 contains an IP address
+            elif i >= 8 and i % 5 == 3:  # Each line with lineno%5==4 contains an IP address
                 # Stripping is done to remove trailing newlines
                 ips.append(line.strip())
-
+                
         inputfile.close()
 
         # Initialising HBase connection
@@ -38,10 +38,10 @@ class MyDaemon(Daemon):
                 for i in ips:
                     # Running ping command
                     # response will hold 0 if successful, something else if it fails
-                    response = os.system('ping -c 1 -w ' + timeout + ' ' + i)
+                    pingresponse = os.system('ping -c 1 -w ' + timeout + ' ' + i)
                     
                     # Adds result to the ping command
-                    pingresults[i.strip()+":ping"] = str(response == 0)
+                    pingresults[i.strip()+":ping"] = str(pingresponse == 0)
 
                 # Deleting previous output, putting new output into the database
                 # Key = 'row', Value = 'pingresults'
