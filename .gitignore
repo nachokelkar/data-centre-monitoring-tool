@@ -5,4 +5,4 @@ cpudata.txt
 uptdata.txt
 dskdata.txt
 memdata.txt
-daemon.pyc
+*.pyc
