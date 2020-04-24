@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(1),
         paddingLeft: theme.spacing(2),
         marginBottom: theme.spacing(2),
-        // paddingBottom: theme.spacing(3)
     },
     position: {
         paddingRight: theme.spacing(3),
@@ -71,7 +70,7 @@ export default function Racks(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const serverStatus = props.ok === "OK" ? true : false;
-    const [selectedValue, setSelectedValue] = React.useState(true);
+    const selectedValue = React.useState(true);
 
     const handleClickOpen = () => {
         setOpen(true);
