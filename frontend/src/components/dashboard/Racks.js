@@ -31,37 +31,38 @@ const tiers = [
     {
         title: "Rack 1",
         servers: [
-            ["1", "r1_s1", "17.192.60.49", "Ubuntu 18.04", "83", "40"],
-            ["2", "r1_s2", "235.206.163.213", "Windows 7", "76", "38"],
-            ["3", "r1_s3", "31.48.70.92", "Windows 10", "49", "60"],
+            ["1", "r1_s1", "17.192.60.49", "Ubuntu 18.04", "83", "40", "OK"],
+            ["2", "r1_s2", "235.206.163.213", "Windows 7", "76", "38", "OK"],
+            ["3", "r1_s3", "31.48.70.92", "Windows 10", "49", "60", "OK"],
         ],
     },
     {
         title: "Rack 2",
         servers: [
-            ["1", "r1_s1", "249.8.152.227", "Ubuntu 18.04", "82", "61"],
-            ["2", "r1_s2", "8.220.11.103", "Windows 10", "27", "93"],
-            ["3", "r1_s3", "38.192.127.154", "Windows 7", "44", "77"],
-            ["4", "r1_s4", "22.74.368.15", "Ubuntu 16.04", "87", "37"],
+            ["1", "r1_s1", "249.8.152.227", "Ubuntu 18.04", "82", "61", "OK"],
+            ["2", "r1_s2", "8.220.11.103", "Windows 10", "27", "93", "NOK"],
+            ["3", "r1_s3", "38.192.127.154", "Windows 7", "44", "77", "OK"],
+            ["4", "r1_s4", "22.74.368.15", "Ubuntu 16.04", "87", "37", "OK"],
         ],
     },
     {
         title: "Rack 3",
         servers: [
-            ["1", "r1_s1", "106.7.151.150", "Windows 10", "93", "91"],
-            ["2", "r1_s2", "174.185.160.163", "Ubuntu 18.04", "80", "64"],
-            ["3", "r1_s3", "212.74.38.159", "Windows 7", "77", "87"],
+            ["1", "r1_s1", "106.7.151.150", "Windows 10", "93", "91", "OK"],
+            ["2", "r1_s2", "174.185.160.163", "Ubuntu 18.04", "80", "64", "OK"],
+            ["3", "r1_s3", "212.74.38.159", "Windows 7", "77", "87", "NOK"],
         ],
     },
 ];
 export default function Racks() {
     const classes = useStyles();
-    fetch('http://127.0.0.1:5000/test', {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+
+    fetch("http://127.0.0.1:5000/test", {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            "Content-Type": "application/json",
+        },
     })
         .then((response) => response.json())
         .then((data) => {
@@ -111,6 +112,7 @@ export default function Racks() {
                                                     os={server[3]}
                                                     cpu={server[4]}
                                                     dsk={server[5]}
+                                                    ok={server[6]}
                                                 />
                                             </React.Fragment>
                                         ))}
