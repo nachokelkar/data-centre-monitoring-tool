@@ -12,8 +12,10 @@
     "@material-ui/core": "latest",
     "@material-ui/icons": "^4.9.1",
     "clsx": "latest",
+    "history": "^4.10.1",
     "react": "latest",
     "react-dom": "latest",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "latest",
     "recharts": "^1.8.5"
   },

@@ -5,7 +5,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -13,13 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Container from "@material-ui/core/Container";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { mainListItems, secondaryListItems } from "./listItems";
-import Racks from "./Racks";
-
-import Switch from "@material-ui/core/Switch";
-import Paper from "@material-ui/core/Paper";
-import Fade from "@material-ui/core/Fade";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { mainListItems, secondaryListItems } from "../listItems";
 
 const drawerWidth = 240;
 
@@ -103,12 +96,6 @@ export default function Dashboard() {
         setOpen(false);
     };
 
-    const [checked, setChecked] = React.useState(false);
-
-    const handleChange = () => {
-        setChecked((prev) => !prev);
-    };
-
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -136,7 +123,7 @@ export default function Dashboard() {
                         noWrap
                         className={classes.title}
                     >
-                        Dashboard
+                        Yearly Report
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -163,31 +150,7 @@ export default function Dashboard() {
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
-                    <Racks />
-
-                    {/* <Grid>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={checked}
-                                    onChange={handleChange}
-                                />
-                            }
-                            label="Show"
-                        />
-                        <div className={classes.container}>
-                            <Fade in={checked}>
-                                <Paper elevation={4} className={classes.paper}>
-                                    <svg className={classes.svg}>
-                                        <polygon
-                                            points="0,100 50,00, 100,100"
-                                            className={classes.polygon}
-                                        />
-                                    </svg>
-                                </Paper>
-                            </Fade>
-                        </div>
-                    </Grid> */}
+                    Yearly Report
                 </Container>
             </main>
         </div>
