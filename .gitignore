@@ -1,8 +1,40 @@
-dumps
-ping.txt
-ssh.txt
-cpudata.txt
-uptdata.txt
-dskdata.txt
-memdata.txt
-*.pyc
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.vscode
+
+# dependencies
+frontend/node_modules
+frontend/.pnp
+frontend.pnp.js
+
+# testing
+frontend/coverage
+
+# production
+frontend/build
+
+# IDEs and editors
+frontend/.idea
+frontend/.vscode
+
+# misc
+frontend/.DS_Store
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/yarn.lock
+
+
+#backend
+backend/daemon/dumps
+backend/daemon/ping.txt
+backend/daemon/ssh.txt
+backend/daemon/cpudata.txt
+backend/daemon/uptdata.txt
+backend/daemon/dskdata.txt
+backend/daemon/memdata.txt
+backend/util.pyc
