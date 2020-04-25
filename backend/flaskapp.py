@@ -23,7 +23,7 @@ def index():
     return render_template('table.html')
 
 
-@app.route('/snmp', methods={'GET'})
+@app.route('api/v1/snmp', methods={'GET'})
 def get_snmp():
     try:
         conn = happybase.Connection('localhost', port=9090)
@@ -73,7 +73,7 @@ def get_snmp():
         return json.dumps({}), 400, {'ContentType': 'application/json'}
 
 
-@app.route('/ping', methods={'GET'})
+@app.route('api/v1/ping', methods={'GET'})
 def get_ping():
     try:
         conn = happybase.Connection('localhost', port=9090)
@@ -104,7 +104,7 @@ def get_ping():
         return json.dumps({}), 400, {'ContentType': 'application/json'}
 
 
-@app.route('/ssh', methods={'GET'})
+@app.route('api/v1/ssh', methods={'GET'})
 def get_ssh():
     try:
         conn = happybase.Connection('localhost', port=9090)
