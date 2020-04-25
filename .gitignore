@@ -38,3 +38,4 @@ backend/daemon/uptdata.txt
 backend/daemon/dskdata.txt
 backend/daemon/memdata.txt
 backend/util.pyc
+backend/__pycache__
