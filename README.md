@@ -19,25 +19,48 @@ Inputs must be in `backend/inputs.txt` in the following format:
   * SSH password on the third line
   * Empty line
 
-## Initial setup for database
+---
+## Backend
+```sh
+cd backend
+```
+
+
+### Initial setup for database
 The database must be set up according to the IP addresses.\
 HBase must be installed (https://hbase.apache.org/book.html#quickstart).\
+To initialise the tables
+```sh
+$ python util/table_init.py
+```
+To clear the tables
+```sh
+$ python util/table_clr.py
+```
 Once that is done, run `util/table_init.py` to create the tables and `util/table_clr.py` to delete tables.
 
-## Usage
+### Usage
 * Create input file `input.txt` as above
 * Make sure HBase is running\
 (In HBase folder, `$ bin/start-hbase.sh`)
 * Thrift must be running on port 9090\
 (In HBase folder, `$ bin/hbase-daemon.sh start thrift -p 9090`)
-* To start daemon processes,\
-  `$ daemon/dcmt.sh start`
-* To stop daemon processes,\
-  `$ daemon/dcmt.sh stop`
-* To restart daemon processes,\
-  `$ daemon/dcmt.sh restart`
-* To start flask app,\
-  `$ python flaskapp.py`
+* To start daemon processes,
+  ```sh
+  $ daemon/dcmt.sh start
+  ```
+* To stop daemon processes,
+  ```sh
+  $ daemon/dcmt.sh stop
+  ```
+* To restart daemon processes,
+  ```sh
+  $ daemon/dcmt.sh restart
+  ```
+* To start flask app,
+  ```sh
+  $ python flaskapp.py
+  ```
 * Outputs are stored as in tables `'snmp'`, `'ping'` and `'ssh'` in HBase
 * Daemon output and errors stored in `daemon/dumps`
 
@@ -52,3 +75,13 @@ Once that is done, run `util/table_init.py` to create the tables and `util/table
 * Check out front-end
 * Check switch, router health (1)
 * Display log files (head, tail, entire file)
+---
+## Frontend
+
+### To run 
+```sh
+$ yarn
+$ yarn start
+```
+
+
