@@ -11,7 +11,7 @@ class MyDaemon(Daemon):
     def run(self):
         # All input is read from an input file
         # Format of the file is specified in the file itself
-        inputfile = open(os.path.join(sys.path[0], 'input.txt'), 'r')
+        inputfile = open(os.path.join(sys.path[0], '../input.txt'), 'r')
 
         ips = list()  # Stores the IP addresses given in the input
 

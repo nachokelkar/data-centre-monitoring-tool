@@ -10,7 +10,7 @@ A basic tool to monitor the network and servers in a data centre.
 * Checks and stores uptime
 
 ## Initial setup for inputs
-Inputs must be in `inputs.txt` in the following format:
+Inputs must be in `backend/inputs.txt` in the following format:
 * Frequency of updates (in seconds) must be on Line 6
 * Allowed timeout for pinging and SSH (in seconds) must be on Line 7
 * IP addresses and other details must be in the following format starting on Line 8:
@@ -22,24 +22,24 @@ Inputs must be in `inputs.txt` in the following format:
 ## Initial setup for database
 The database must be set up according to the IP addresses.\
 HBase must be installed (https://hbase.apache.org/book.html#quickstart).\
-Once that is done, run `table_init.py` to create the tables and `table_clr.py` to delete tables.
+Once that is done, run `backend/util/table_init.py` to create the tables and `backend/util/table_clr.py` to delete tables.
 
 ## Usage
-* Create input file `input.txt` as above
+* Create input file `backend/input.txt` as above
 * Make sure HBase is running\
 (In HBase folder, `$ bin/start-hbase.sh`)
 * Thrift must be running on port 9090\
 (In HBase folder, `$ bin/hbase-daemon.sh start thrift -p 9090`)
 * To start daemon processes,\
-  `$ ./daemon.sh start`
+  `$ backend/daemon/dcmt.sh start`
 * To stop daemon processes,\
-  `$ ./daemon.sh stop`
+  `$ backend/daemon/dcmt.sh stop`
 * To restart daemon processes,\
-  `$ ./daemon.sh restart`
+  `$ backend/daemon/dcmt.sh restart`
 * To start flask app,\
   `$ python flaskapp.py`
 * Outputs are stored as in tables `'snmp'`, `'ping'` and `'ssh'` in HBase
-* Daemon output and errors stored in `/dumps`
+* Daemon output and errors stored in `backend/daemon/dumps`
 
 > ### Note on daemon files
 > Change pidfile, output, error file paths for every new daemon python created.\
