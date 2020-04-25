@@ -2,8 +2,8 @@
 
 if [ "$1" = "start" ]
 then
-    sudo rm -rf dumps
-    sudo mkdir dumps
+    sudo rm -rf daemon/dumps
+    sudo mkdir daemon/dumps
     sudo python2 daemon/snmpdaemon.py start
     echo 'SNMP daemon RUNNING'
     sudo python2 daemon/pingdaemon.py start

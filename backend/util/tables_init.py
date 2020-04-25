@@ -3,7 +3,7 @@ import os
 import sys
 
 conn = happybase.Connection('localhost', port=9090)
-inputfile = open(os.path.join(sys.path[0], 'input.txt'), 'r')
+inputfile = open(os.path.join(sys.path[0], '../input.txt'), 'r')
 
 ips = dict()
 
