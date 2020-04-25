@@ -22,24 +22,24 @@ Inputs must be in `backend/inputs.txt` in the following format:
 ## Initial setup for database
 The database must be set up according to the IP addresses.\
 HBase must be installed (https://hbase.apache.org/book.html#quickstart).\
-Once that is done, run `backend/util/table_init.py` to create the tables and `backend/util/table_clr.py` to delete tables.
+Once that is done, run `util/table_init.py` to create the tables and `util/table_clr.py` to delete tables.
 
 ## Usage
-* Create input file `backend/input.txt` as above
+* Create input file `input.txt` as above
 * Make sure HBase is running\
 (In HBase folder, `$ bin/start-hbase.sh`)
 * Thrift must be running on port 9090\
 (In HBase folder, `$ bin/hbase-daemon.sh start thrift -p 9090`)
 * To start daemon processes,\
-  `$ backend/daemon/dcmt.sh start`
+  `$ daemon/dcmt.sh start`
 * To stop daemon processes,\
-  `$ backend/daemon/dcmt.sh stop`
+  `$ daemon/dcmt.sh stop`
 * To restart daemon processes,\
-  `$ backend/daemon/dcmt.sh restart`
+  `$ daemon/dcmt.sh restart`
 * To start flask app,\
   `$ python flaskapp.py`
 * Outputs are stored as in tables `'snmp'`, `'ping'` and `'ssh'` in HBase
-* Daemon output and errors stored in `backend/daemon/dumps`
+* Daemon output and errors stored in `daemon/dumps`
 
 > ### Note on daemon files
 > Change pidfile, output, error file paths for every new daemon python created.\
