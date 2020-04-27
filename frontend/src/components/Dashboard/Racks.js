@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -27,48 +27,86 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const tiers = [
-    {
-        title: "Rack 1",
-        servers: [
-            ["1", "r1_s1", "17.192.60.49", "Ubuntu 18.04", "83", "40", "OK"],
-            ["2", "r1_s2", "235.206.163.213", "Windows 7", "76", "38", "OK"],
-            ["3", "r1_s3", "31.48.70.92", "Windows 10", "49", "60", "OK"],
-        ],
-    },
-    {
-        title: "Rack 2",
-        servers: [
-            ["1", "r1_s1", "249.8.152.227", "Ubuntu 18.04", "82", "61", "OK"],
-            ["2", "r1_s2", "8.220.11.103", "Windows 10", "27", "93", "NOK"],
-            ["3", "r1_s3", "38.192.127.154", "Windows 7", "44", "77", "OK"],
-            ["4", "r1_s4", "22.74.368.15", "Ubuntu 16.04", "87", "37", "OK"],
-        ],
-    },
-    {
-        title: "Rack 3",
-        servers: [
-            ["1", "r1_s1", "106.7.151.150", "Windows 10", "93", "91", "OK"],
-            ["2", "r1_s2", "174.185.160.163", "Ubuntu 18.04", "80", "64", "OK"],
-            ["3", "r1_s3", "212.74.38.159", "Windows 7", "77", "87", "NOK"],
-        ],
-    },
-];
 export default function Racks() {
     const classes = useStyles();
+    const [racks, setRacks] = useState([]);
 
-    fetch("http://127.0.0.1:5000/test", {
-        method: "GET",
-        mode: "cors",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data);
-        })
-        .catch((error) => console.error(error));
+    const fetchSnmp = useCallback(async () => {
+        let res = await fetch("http://127.0.0.1:5000/api/v1/snmp", {
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).catch((e) => alert("Failed to fetch" + e));
+        let data = await res.json();
+        let tmp_rack1 = [];
+        let tmp_rack2 = [];
+        let tmp_rack3 = [];
+        for (var ip in data) {
+            //get ping & ssh data here, append to each data[ip]
+
+            // Rack 1
+            if (data[ip][0] === "1") {
+                let server = {};
+                server[ip] = data[ip];
+                tmp_rack1.push(server);
+            } else if (data[ip][0] === "2") {
+                let server = { ip: data[ip] };
+                tmp_rack2.push(server);
+            } else if (data[ip][0] === "3") {
+                let server = { ip: data[ip] };
+                tmp_rack3.push(server);
+            }
+        }
+
+        /* dummy data code */
+        tmp_rack1.push({
+            "17.192.60.49": ["1", "22", "45", "51", "Windows 10", "895082"],
+        });
+        tmp_rack1.push({
+            "235.206.163.213": ["1", "24", "41", "91", "CentOS", "845082"],
+        });
+        tmp_rack1.push({
+            "31.48.70.92": ["1", "34", "15", "71", "Ubuntu", "895082"],
+        });
+        tmp_rack2.push({
+            "249.8.152.227": ["2", "82", "61", "65", "CentOS", "895082"],
+        });
+        tmp_rack2.push({
+            "8.220.11.103": ["2", "82", "61", "65", "Windows 10", "895082"],
+        });
+        tmp_rack2.push({
+            "38.192.127.154": ["2", "82", "61", "65", "Ubuntu", "895082"],
+        });
+        tmp_rack2.push({
+            "22.74.368.15": ["2", "82", "61", "65", "Windows 10", "895082"],
+        });
+        tmp_rack3.push({
+            "106.7.151.150": ["2", "82", "61", "65", "Ubuntu", "895082"],
+        });
+        tmp_rack3.push({
+            "174.185.160.163": ["2", "82", "61", "65", "Windows 10", "895082"],
+        });
+        tmp_rack3.push({
+            "212.74.38.159": ["2", "82", "61", "65", "Ubuntu", "895082"],
+        });
+
+        /* end of dummy data code*/
+
+        let tmp_racks = [];
+        tmp_racks.push(tmp_rack1);
+        tmp_racks.push(tmp_rack2);
+        tmp_racks.push(tmp_rack3);
+        console.log(tmp_racks);
+        setRacks(tmp_racks);
+    }, []);
+
+    useEffect(() => {
+        fetchSnmp();
+        // setInterval(() => {
+        //     fetchSnmp();
+        // }, 5000);
+    }, [fetchSnmp]);
     return (
         <React.Fragment>
             {/* Hero unit */}
@@ -90,37 +128,50 @@ export default function Racks() {
             {/* End hero unit */}
             <Container maxWidth="lg" component="main">
                 <Grid container spacing={2}>
-                    {tiers.map((tier) => (
-                        <Grid item key={tier.title} xs={12} md={4}>
-                            <Card>
-                                <CardHeader
-                                    title={tier.title}
-                                    titleTypographyProps={{ align: "center" }}
-                                    subheaderTypographyProps={{
-                                        align: "center",
-                                    }}
-                                    className={classes.cardHeader}
-                                />
-                                <CardContent>
-                                    <ul>
-                                        {tier.servers.map((server) => (
-                                            <React.Fragment>
-                                                <Server
-                                                    // expanded={true}
-                                                    position={server[0]}
-                                                    ip={server[2]}
-                                                    os={server[3]}
-                                                    cpu={server[4]}
-                                                    dsk={server[5]}
-                                                    ok={server[6]}
-                                                />
-                                            </React.Fragment>
-                                        ))}
-                                    </ul>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
+                    {racks.map((rack) => {
+                        let i = 1;
+                        let title = "Rack " + i;
+                        i = i + 1;
+                        return (
+                            <Grid item xs={12} md={4}>
+                                <Card>
+                                    <CardHeader
+                                        title={title}
+                                        titleTypographyProps={{
+                                            align: "center",
+                                        }}
+                                        subheaderTypographyProps={{
+                                            align: "center",
+                                        }}
+                                        className={classes.cardHeader}
+                                    />
+                                    <CardContent>
+                                        <ul>
+                                            {rack.map((server) => {
+                                                let pos = 0;
+                                                let ip = Object.keys(server)[0];
+                                                pos = pos + 1;
+                                                let entries = server[ip];
+                                                return (
+                                                    <React.Fragment>
+                                                        <Server
+                                                            // expanded={true}
+                                                            position={pos}
+                                                            ip={ip}
+                                                            os={entries[4]}
+                                                            cpu={entries[1]}
+                                                            dsk={entries[2]}
+                                                            ok="OK"
+                                                        />
+                                                    </React.Fragment>
+                                                );
+                                            })}
+                                        </ul>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        );
+                    })}
                 </Grid>
             </Container>
         </React.Fragment>

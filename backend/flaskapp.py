@@ -41,7 +41,7 @@ def get_snmp():
             value = to_string(data[-1][x])
             ip_addr = key.split(':')[0]
             if(ip_addr not in response.keys()):
-                response[ip_addr] = []
+                response[ip_addr] = ["1"]
 
             if(key.split(':')[1] == 'cpu'):
                 tmp = to_list(value)

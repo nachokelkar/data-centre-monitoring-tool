@@ -52,6 +52,7 @@ class MyDaemon(Daemon):
                     putdict[i+':disk'] = str(dsk_data)
                     putdict[i+':upt'] = str(upt_data)
                     putdict[i+':os'] = str(os_data)
+                    putdict[i+':rack'] = "1" #TO DO
 
                 # Writing to database
                 # Key = timestamp during write
