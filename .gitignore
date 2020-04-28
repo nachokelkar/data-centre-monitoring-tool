@@ -28,6 +28,7 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/yarn.lock
 
+*.pyc
 
 #backend
 backend/daemon/dumps
@@ -37,5 +38,4 @@ backend/daemon/cpudata.txt
 backend/daemon/uptdata.txt
 backend/daemon/dskdata.txt
 backend/daemon/memdata.txt
-backend/util.pyc
 backend/__pycache__

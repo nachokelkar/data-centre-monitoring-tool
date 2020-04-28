@@ -45,28 +45,30 @@ def get_snmp():
 
             if(key.split(':')[1] == 'cpu'):
                 tmp = to_list(value)
-                response[ip_addr].append(tmp[0])
+                # response[ip_addr].append(tmp[0])
+                response[ip_addr].insert(1, tmp[0])
+
             elif(key.split(':')[1] == 'disk'):
                 tmp = value.strip('[]').split('), ')
                 tmp = to_list(tmp[0])
                 # used physical space / total physical space *100
-                perc = (float(tmp[3])/float(tmp[2]))*100
-                response[ip_addr].append(perc)
+                perc = round((float(tmp[3])/float(tmp[2]))*100)
+                response[ip_addr].insert(2, perc)
             elif(key.split(':')[1] == 'memory'):
                 tmp = to_list(value)
                 # used swap space / total swap space *100
-                perc = (float(tmp[1]) / float(tmp[0]))*100
-                response[ip_addr].append(perc)
+                perc = round((float(tmp[1]) / float(tmp[0]))*100)
+                response[ip_addr].insert(2, perc)
             elif(key.split(':')[1] == 'os'):
                 tmp = value.split()[0]
-                response[ip_addr].append(tmp)
+                response[ip_addr].insert(4, tmp)
             elif(key.split(':')[1] == 'upt'):
-                response[ip_addr].append(value)
+                response[ip_addr].insert(5, value)
 
             # print(x, data[-1][x])
             # print('\n\n\n')
         '''
-            Response format {ip_addr1: [cpu_data, dsk_data, mem_data, os, upt], ...}
+            Response format {ip_addr1: [rack_no, cpu_data, dsk_data, mem_data, os, upt], ...}
         '''
         return json.dumps(response), 200, {'ContentType': 'application/json'}
     except:
@@ -104,6 +106,35 @@ def get_ping():
         return json.dumps({}), 400, {'ContentType': 'application/json'}
 
 
+@app.route('/api/v1/ping/<ip_addr>', methods={'GET'})
+def get_ip_ping(ip_addr):
+    try:
+        conn = happybase.Connection('localhost', port=9090)
+        table = conn.table('ping')
+        row_key = str(datetime.now())[:16]
+        conn.open()
+
+        data = [data for (key, data) in table.scan(row_start=row_key)]
+        conn.close()
+
+        response = {}
+
+        for x in data[-1]:
+            key = to_string(x)
+            value = to_string(data[-1][x])
+            ip = key.split(':')[0]
+            if(ip == ip_addr):
+                response["data"] = value
+                break
+
+        '''
+            Response format { data: "True" <or> "False", ...}
+        '''
+        return json.dumps(response), 200, {'ContentType': 'application/json'}
+    except:
+        return json.dumps({}), 400, {'ContentType': 'application/json'}
+
+
 @app.route('/api/v1/ssh', methods={'GET'})
 def get_ssh():
     try:
@@ -127,7 +158,7 @@ def get_ssh():
             if(key.split(':')[1] == 'ssh'):
                 response[ip_addr].append(value)
             # elif(key.split(':')[1] == 'last'):
-                #todo
+                # todo
 
         '''
             Response format {<ip_addr>: ["True" <or> "False"], ...}
