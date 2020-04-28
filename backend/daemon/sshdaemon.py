@@ -3,6 +3,7 @@ import sys
 import time
 import os
 from daemon import Daemon
+import paramiko
 from paramiko import BadHostKeyException, AuthenticationException, SSHException
 
 class MyDaemon(Daemon):
