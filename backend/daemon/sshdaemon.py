@@ -6,6 +6,7 @@ from daemon import Daemon
 import paramiko
 from paramiko import BadHostKeyException, AuthenticationException, SSHException
 
+
 class MyDaemon(Daemon):
     def run(self):
         # All input is read from an input file
@@ -40,8 +41,8 @@ class MyDaemon(Daemon):
             if ips:
                 # ssh = paramiko.SSHClient()
                 # ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                
-                sshresults = dict() # Stores SSH output
+
+                sshresults = dict()  # Stores SSH output
 
                 for i in range(len(ips)):
                     try:
@@ -50,18 +51,14 @@ class MyDaemon(Daemon):
                         sshresults[ips[i]+':ssh'] = 'True'
                         sshresults[ips[i]+':last'] = ""
 
-                        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("last -n 5")
-                        
-                        # -----------
-                        # CHANGE THIS
-                        # -----------
+                        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(
+                            "last -n 10")
 
                         for j in ssh_stdout:
                             j = j.split(" ")
-                            if j[0] != "" and j[0] != "wtmp":
-                                sshresults[ips[i]+':last'] += j[0]
-
-                        # Thanks boi ly
+                            if j[0] != "" and j[0] != "wtmp" and j[0] != "reboot":
+                                
+                                sshresults[ips[i]+':last'] += (j[0]+"\n")
 
                     except (BadHostKeyException, AuthenticationException,
                             SSHException) as e:

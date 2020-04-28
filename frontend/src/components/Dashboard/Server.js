@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
+import PersonIcon from "@material-ui/icons/Person";
 import OpenInNewOutlined from "@material-ui/icons/OpenInNewOutlined";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
@@ -27,6 +32,13 @@ const useStyles = makeStyles((theme) => ({
     position: {
         paddingRight: theme.spacing(3),
     },
+    paperHeading: {
+        paddingRight: theme.spacing(1),
+        paddingBottom: theme.spacing(1),
+        paddingLeft: theme.spacing(3),
+        paddingTop: theme.spacing(0),
+        marginTop: theme.spacing(0),
+    },
     margin: {
         color: "white",
         paddingRight: theme.spacing(1),
@@ -38,16 +50,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SimpleDialog(props) {
-    // const classes = useStyles();
+    const classes = useStyles();
     const { onClose, selectedValue, open } = props;
+
+    const lastLoggedIn = useCallback(async () => {
+        let res = await fetch("http://127.0.0.1:5000/api/v1/ssh", {
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).catch((e) => alert("Network Error"));
+        let data = await res.json();
+        // console.log(data);
+    }, []);
+    useEffect(() => {
+        lastLoggedIn();
+    }, [lastLoggedIn]);
 
     const handleClose = () => {
         onClose(selectedValue);
     };
-
-    // const handleListItemClick = value => {
-    //   onClose(value);
-    // };
 
     return (
         <Dialog
@@ -55,12 +77,30 @@ function SimpleDialog(props) {
             aria-labelledby="simple-dialog-title"
             open={open}
         >
-            <DialogTitle id="simple-dialog-title">
-                Network Topology {"&"} Other Info
-            </DialogTitle>
+            <DialogTitle id="simple-dialog-title">Server Info</DialogTitle>
             <Paper>
-                -Network Topology
-                <br /> -ssh info
+                <Grid item>
+                    <Typography
+                        variant="caption"
+                        className={classes.paperHeading}
+                    >
+                        Last logged in users list
+                    </Typography>
+                    <List component="nav" aria-label="main mailbox folders">
+                        <ListItem button>
+                            <ListItemIcon>
+                                <PersonIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Inbox" />
+                        </ListItem>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <PersonIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Drafts" />
+                        </ListItem>
+                    </List>
+                </Grid>
             </Paper>
         </Dialog>
     );
@@ -136,7 +176,7 @@ export default function Racks(props) {
                                 </Typography>
                                 <Typography variant="h6">
                                     {" "}
-                                    {props.cpu}{" "}
+                                    {props.cpu === undefined ? "-" : props.cpu}{" "}
                                 </Typography>
                             </Grid>
                             <Grid item xs={6}>
@@ -145,7 +185,7 @@ export default function Racks(props) {
                                 </Typography>
                                 <Typography variant="h6">
                                     {" "}
-                                    {props.dsk}{" "}
+                                    {props.dsk === undefined ? "-" : props.dsk}{" "}
                                 </Typography>
                             </Grid>
                             <Grid item xs={3}>

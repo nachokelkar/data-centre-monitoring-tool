@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, json, url_for, send_file
-# import ecks
-import subprocess
+import os
 import happybase
 from datetime import datetime
 from flask_cors import CORS
@@ -41,32 +40,34 @@ def get_snmp():
             value = to_string(data[-1][x])
             ip_addr = key.split(':')[0]
             if(ip_addr not in response.keys()):
-                response[ip_addr] = ["1"]
+                response[ip_addr] = {}
+                response[ip_addr]["rack"] = 1
 
             if(key.split(':')[1] == 'cpu'):
                 tmp = to_list(value)
                 # response[ip_addr].append(tmp[0])
-                response[ip_addr].insert(1, tmp[0])
+                response[ip_addr]["cpu"] = tmp[0]
 
             elif(key.split(':')[1] == 'disk'):
                 tmp = value.strip('[]').split('), ')
                 tmp = to_list(tmp[0])
                 # used physical space / total physical space *100
                 perc = round((float(tmp[3])/float(tmp[2]))*100)
-                response[ip_addr].insert(2, perc)
+                response[ip_addr]["disk"] = perc
             elif(key.split(':')[1] == 'memory'):
                 tmp = to_list(value)
                 # used swap space / total swap space *100
                 perc = round((float(tmp[1]) / float(tmp[0]))*100)
-                response[ip_addr].insert(2, perc)
+                response[ip_addr]["memory"] = perc
             elif(key.split(':')[1] == 'os'):
                 tmp = value.split()[0]
-                response[ip_addr].insert(4, tmp)
+                response[ip_addr]["os"] = tmp
             elif(key.split(':')[1] == 'upt'):
-                response[ip_addr].insert(5, value)
-
+                response[ip_addr]["upt"] = value
             # print(x, data[-1][x])
             # print('\n\n\n')
+
+            print(response)
         '''
             Response format {ip_addr1: [rack_no, cpu_data, dsk_data, mem_data, os, upt], ...}
         '''
@@ -156,9 +157,10 @@ def get_ssh():
                 response[ip_addr] = []
 
             if(key.split(':')[1] == 'ssh'):
-                response[ip_addr].append(value)
-            # elif(key.split(':')[1] == 'last'):
-                # todo
+                response[ip_addr].insert(0, value)
+            elif(key.split(':')[1] == 'last'):
+                value = value.rstrip("\n")
+                response[ip_addr].insert(1, value)
 
         '''
             Response format {<ip_addr>: ["True" <or> "False"], ...}

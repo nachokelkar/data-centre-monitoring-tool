@@ -59,95 +59,131 @@ export default function Racks() {
             if (pingData === "True") serverStatus = "OK";
             else serverStatus = "NOK";
 
-            data[ip].push(serverStatus);
+            let serverData = data[ip];
+            serverData["ping"] = serverStatus;
+            // console.log(serverData);
             // Rack 1
-            if (data[ip][0] === "1") {
+            if (serverData["rack"] === 1) {
                 let server = {};
-                server[ip] = data[ip];
+                server[ip] = serverData;
                 tmp_rack1.push(server);
             }
             // Rack 2
-            else if (data[ip][0] === "2") {
-                let server = { ip: data[ip] };
+            else if (serverData["rack"] === 2) {
+                let server = {};
+                server[ip] = serverData;
                 tmp_rack2.push(server);
             }
             // Rack 3
-            else if (data[ip][0] === "3") {
-                let server = { ip: data[ip] };
+            else if (serverData["rack"] === 3) {
+                let server = {};
+                server[ip] = serverData;
                 tmp_rack3.push(server);
             }
         }
 
         /* dummy data code */
         tmp_rack1.push({
-            "17.192.60.49": [
-                "1",
-                "22",
-                "45",
-                "51",
-                "Windows 10",
-                "895082",
-                "OK",
-            ],
+            "17.192.60.49": {
+                "127.0.0.1": {
+                    upt: "317222",
+                    cpu: "14",
+                    os: "Ubuntu 18.04",
+                    rack: 1,
+                    memory: 86.0,
+                    ping: "OK",
+                },
+            },
         });
         tmp_rack1.push({
-            "235.206.163.213": [
-                "1",
-                "24",
-                "41",
-                "91",
-                "CentOS",
-                "845082",
-                "OK",
-            ],
+            "235.206.163.213": {
+                upt: "317222",
+                cpu: "14",
+                os: "Linux",
+                rack: 1,
+                memory: 86.0,
+                ping: "OK",
+            },
         });
         tmp_rack1.push({
-            "31.48.70.92": ["1", "34", "15", "71", "Ubuntu", "895082", "NOK"],
+            "31.48.70.92": {
+                upt: "",
+                cpu: "",
+                os: "Linux",
+                rack: 1,
+                memory: "",
+                ping: "NOK",
+            },
         });
         tmp_rack2.push({
-            "249.8.152.227": ["2", "82", "61", "65", "CentOS", "895082", "OK"],
+            "249.8.152.227": {
+                upt: "317222",
+                cpu: "14",
+                os: "Linux",
+                rack: 2,
+                memory: 86.0,
+                ping: "OK",
+            },
         });
         tmp_rack2.push({
-            "8.220.11.103": [
-                "2",
-                "82",
-                "61",
-                "65",
-                "Windows 10",
-                "895082",
-                "OK",
-            ],
+            "8.220.11.103": {
+                upt: "317222",
+                cpu: "14",
+                os: "Linux",
+                rack: 2,
+                memory: 86.0,
+                ping: "OK",
+            },
         });
         tmp_rack2.push({
-            "38.192.127.154": ["2", "82", "61", "65", "Ubuntu", "895082", "OK"],
+            "38.192.127.154": {
+                upt: "317222",
+                cpu: "14",
+                os: "Linux",
+                rack: 2,
+                memory: 86.0,
+                ping: "OK",
+            },
         });
         tmp_rack2.push({
-            "22.74.368.15": [
-                "2",
-                "82",
-                "61",
-                "65",
-                "Windows 10",
-                "895082",
-                "OK",
-            ],
+            "22.74.368.15": {
+                upt: "317222",
+                cpu: "14",
+                os: "Linux",
+                rack: 2,
+                memory: 86.0,
+                ping: "OK",
+            },
         });
         tmp_rack3.push({
-            "106.7.151.150": ["2", "82", "61", "65", "Ubuntu", "895082", "NOK"],
+            "106.7.151.150": {
+                upt: "317222",
+                cpu: "",
+                os: "Linux",
+                rack: 3,
+                memory: "",
+                ping: "NOK",
+            },
         });
         tmp_rack3.push({
-            "174.185.160.163": [
-                "2",
-                "82",
-                "61",
-                "65",
-                "Windows 10",
-                "895082",
-                "OK",
-            ],
+            "174.185.160.163": {
+                upt: "317222",
+                cpu: "14",
+                os: "Linux",
+                rack: 3,
+                memory: 86.0,
+                ping: "OK",
+            },
         });
         tmp_rack3.push({
-            "212.74.38.159": ["2", "82", "61", "65", "Ubuntu", "895082", "OK"],
+            "212.74.38.159": {
+                upt: "317222",
+                cpu: "14",
+                os: "Linux",
+                rack: 3,
+                memory: 86.0,
+                ping: "OK",
+            },
         });
 
         /* end of dummy data code*/
@@ -188,7 +224,8 @@ export default function Racks() {
             <Container maxWidth="lg" component="main">
                 <Grid container spacing={2}>
                     {racks.map((rack) => {
-                        let i = 1;
+                        let tmp = Object.keys(rack[0])[0]
+                        let i = rack[0][tmp].rack;
                         let title = "Rack " + i;
                         i = i + 1;
                         return (
@@ -217,10 +254,10 @@ export default function Racks() {
                                                             // expanded={true}
                                                             position={pos}
                                                             ip={ip}
-                                                            os={entries[4]}
-                                                            cpu={entries[1]}
-                                                            dsk={entries[2]}
-                                                            ok={entries[6]}
+                                                            os={entries["os"]}
+                                                            cpu={entries["cpu"]}
+                                                            dsk={entries["memory"]}
+                                                            ok={entries["ping"]}
                                                         />
                                                     </React.Fragment>
                                                 );
