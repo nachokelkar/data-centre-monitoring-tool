@@ -192,7 +192,7 @@ export default function Racks() {
         tmp_racks.push(tmp_rack1);
         tmp_racks.push(tmp_rack2);
         tmp_racks.push(tmp_rack3);
-        console.log(tmp_racks);
+        // console.log(tmp_racks);
         setRacks(tmp_racks);
     }, []);
 

@@ -154,16 +154,56 @@ def get_ssh():
             value = to_string(data[-1][x])
             ip_addr = key.split(':')[0]
             if(ip_addr not in response.keys()):
-                response[ip_addr] = []
+                response[ip_addr] = {}
 
             if(key.split(':')[1] == 'ssh'):
-                response[ip_addr].insert(0, value)
+                response[ip_addr]["sshStatus"] = value
             elif(key.split(':')[1] == 'last'):
                 value = value.rstrip("\n")
-                response[ip_addr].insert(1, value)
+                response[ip_addr]["last"] = value
 
         '''
-            Response format {<ip_addr>: ["True" <or> "False"], ...}
+            Response format {<ip_addr>: {"last": "user1\nuser1\nuser1\nuser1\nuser1", "sshStatus": "True" or "False"}}
+
+        '''
+        return json.dumps(response), 200, {'ContentType': 'application/json'}
+    except:
+        return json.dumps({}), 400, {'ContentType': 'application/json'}
+
+
+@app.route('/api/v1/ssh/<ip_addr>', methods={'GET'})
+def get_ip_ssh(ip_addr):
+    try:
+        conn = happybase.Connection('localhost', port=9090)
+        table = conn.table('ssh')
+        row_key = str(datetime.now())[:16]
+        conn.open()
+
+        data = [data for (key, data) in table.scan(row_start=row_key)]
+        conn.close()
+
+        response = {}
+
+        for x in data[-1].keys():
+            key = to_string(x)
+            value = to_string(data[-1][x])
+            ip = key.split(':')[0]
+
+            if(ip == ip_addr):
+                if(ip_addr not in response.keys()):
+                    response[ip_addr] = {}
+
+                if(key.split(':')[1] == 'ssh'):
+                    response[ip_addr]["sshStatus"] = value
+                elif(key.split(':')[1] == 'last'):
+                    value = value.rstrip("\n")
+                    response[ip_addr]["last"] = value
+
+                if("sshStatus" in response.keys() and "last" in response.keys()):
+                    break
+
+        '''
+            Response format {<ip_addr>: {"last": "user1\nuser1\nuser1\nuser1\nuser1", "sshStatus": "True" or "False"}}
         '''
         return json.dumps(response), 200, {'ContentType': 'application/json'}
     except:
