@@ -1,31 +1,34 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 if [ "$1" = "start" ]
 then
-    sudo rm -rf daemon/dumps
-    sudo mkdir daemon/dumps
-    sudo python2 daemon/snmpdaemon.py start
-    echo 'SNMP daemon RUNNING'
-    sudo python2 daemon/pingdaemon.py start
-    echo 'Ping daemon RUNNING'
-    sudo python2 daemon/sshdaemon.py start
-    echo 'SSH daemon RUNNING'
+    if [ $# -eq 4 ]
+    then
+        echo 'Removing previous dumps files'
+        sudo rm -rf $DIR/dumps
+        echo 'Creating dumps folder'
+        sudo mkdir $DIR/dumps
+        sudo python2 $DIR/snmpdaemon.py start $2 $4
+        sudo python2 $DIR/pingdaemon.py start $2 $3
+        sudo python2 $DIR/sshdaemon.py start $2 $3
+    else
+        echo 'Usage: ./dcmt.sh start [timeout] [update freq for ping and ssh] [update freq for snmp]'
+    fi
 elif [ "$1" = "stop" ]
 then
-    sudo python2 daemon/snmpdaemon.py stop
-    echo 'SNMP daemon STOPPED'
-    sudo python2 daemon/pingdaemon.py stop
-    echo 'Ping daemon STOPPED'
-    sudo python2 daemon/sshdaemon.py stop
-    echo 'SSH daemon STOPPED'
+    sudo python2 $DIR/snmpdaemon.py stop
+    sudo python2 $DIR/pingdaemon.py stop
+    sudo python2 $DIR/sshdaemon.py stop
 elif [ "$1" = "restart" ]
 then
-    sudo python2 daemon/snmpdaemon.py restart
+    sudo python2 $DIR/snmpdaemon.py restart
     echo 'SNMP daemon RESTARTED'
-    sudo python2 daemon/pingdaemon.py restart
+    sudo python2 $DIR/pingdaemon.py restart
     echo 'Ping daemon RESTARTED'
-    sudo python2 daemon/sshdaemon.py restart
+    sudo python2 $DIR/sshdaemon.py restart
     echo 'SSH daemon RESTARTED'
 else
-    echo 'Usage: ./dcmt.sh [start|stop|restart]'
+    echo 'Usage: ./dcmt.sh [start|stop|restart] [start:timeout] [start:update freq for ping and ssh] [start:update freq for snmp]'
 fi
