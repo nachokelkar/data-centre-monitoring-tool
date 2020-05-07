@@ -34,9 +34,6 @@ def getPhysicalPosition(ip_addr):
             return [rack_number, server_position]
     return []
 
-            
-
-
 def to_string(data):
     return ''.join(chr(x) for x in bytearray(data))
 

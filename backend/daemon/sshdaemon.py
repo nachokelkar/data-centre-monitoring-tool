@@ -18,7 +18,7 @@ class MyDaemon(Daemon):
 
         while True:
             if self.inputdata["IP"]:
-                sshresults = dict() # Stores SSH output
+                sshresults = dict()  # Stores SSH output
 
                 for i in range(len(self.inputdata["IP"])):
                     # Try SSH connection
@@ -29,18 +29,22 @@ class MyDaemon(Daemon):
                         sshresults[self.inputdata["IP"][i]+':last'] = ""
 
                         # This runs the "last" command on the target system, to find last 5 users
-                        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("last -n 5")
+                        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(
+                            "last -n 10")
                         # This part is used to format the output of "last"
                         for j in ssh_stdout:
                             j = j.split(" ")
-                            if j[0] != "" and j[0] != "wtmp":
-                                sshresults[self.inputdata["IP"][i]+':last'] += (j[0]+"\n")
+                            if j[0] != "" and j[0] != "wtmp" and j[0] != "reboot":
+                                sshresults[self.inputdata["IP"]
+                                           [i]+':last'] += (j[0]+"\n")
 
                     # Show exception on failure
                     except (BadHostKeyException, AuthenticationException,
                             SSHException) as e:
-                        sshresults[self.inputdata["IP"][i]+':ssh'] = 'False: ' +str(e)
-                        sshresults[self.inputdata["IP"][i]+":last"] = "Could not SSH"
+                        sshresults[self.inputdata["IP"]
+                                   [i]+':ssh'] = 'False: ' + str(e)
+                        sshresults[self.inputdata["IP"]
+                                   [i]+":last"] = "Could not SSH"
 
                 # Writes to database after deleting previous value
                 # Key = 'row', value = sshresults
