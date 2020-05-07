@@ -30,11 +30,11 @@ $ cd backend
 HBase must be installed (https://hbase.apache.org/book.html#quickstart).\
 To initialise the tables
 ```sh
-$ python util/table_init.py
+$ python util/tables_init.py
 ```
 To clear the tables
 ```sh
-$ python util/table_clr.py
+$ python util/tables_clr.py
 ```
 The application does not initialise or clear tables by itself.\
 Before running, make sure tables are initialised.

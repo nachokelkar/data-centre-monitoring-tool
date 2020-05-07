@@ -61,21 +61,21 @@ export default function Racks() {
 
             let serverData = data[ip];
             serverData["ping"] = serverStatus;
-            // console.log(serverData);
+
             // Rack 1
-            if (serverData["rack"] === 1) {
+            if (serverData["rack_pos"] === "1") {
                 let server = {};
                 server[ip] = serverData;
                 tmp_rack1.push(server);
             }
             // Rack 2
-            else if (serverData["rack"] === 2) {
+            else if (serverData["rack_pos"] === "2") {
                 let server = {};
                 server[ip] = serverData;
                 tmp_rack2.push(server);
             }
             // Rack 3
-            else if (serverData["rack"] === 3) {
+            else if (serverData["rack_pos"] === "3") {
                 let server = {};
                 server[ip] = serverData;
                 tmp_rack3.push(server);
@@ -85,14 +85,13 @@ export default function Racks() {
         /* dummy data code */
         tmp_rack1.push({
             "17.192.60.49": {
-                "127.0.0.1": {
-                    upt: "317222",
-                    cpu: "14",
-                    os: "Ubuntu 18.04",
-                    rack: 1,
-                    memory: 86.0,
-                    ping: "OK",
-                },
+                upt: "317222",
+                cpu: "14",
+                os: "Ubuntu 18.04",
+                rack_pos: 1,
+                server_pos: 2,
+                memory: 86.0,
+                ping: "OK",
             },
         });
         tmp_rack1.push({
@@ -100,7 +99,8 @@ export default function Racks() {
                 upt: "317222",
                 cpu: "14",
                 os: "Linux",
-                rack: 1,
+                rack_pos: 1,
+                server_pos: 3,
                 memory: 86.0,
                 ping: "OK",
             },
@@ -110,7 +110,8 @@ export default function Racks() {
                 upt: "",
                 cpu: "",
                 os: "Linux",
-                rack: 1,
+                rack_pos: 1,
+                server_pos: 4,
                 memory: "",
                 ping: "NOK",
             },
@@ -120,7 +121,8 @@ export default function Racks() {
                 upt: "317222",
                 cpu: "14",
                 os: "Linux",
-                rack: 2,
+                rack_pos: 2,
+                server_pos: 1,
                 memory: 86.0,
                 ping: "OK",
             },
@@ -130,7 +132,8 @@ export default function Racks() {
                 upt: "317222",
                 cpu: "14",
                 os: "Linux",
-                rack: 2,
+                rack_pos: 2,
+                server_pos: 2,
                 memory: 86.0,
                 ping: "OK",
             },
@@ -140,7 +143,8 @@ export default function Racks() {
                 upt: "317222",
                 cpu: "14",
                 os: "Linux",
-                rack: 2,
+                rack_pos: 2,
+                server_pos: 3,
                 memory: 86.0,
                 ping: "OK",
             },
@@ -150,7 +154,8 @@ export default function Racks() {
                 upt: "317222",
                 cpu: "14",
                 os: "Linux",
-                rack: 2,
+                rack_pos: 2,
+                server_pos: 4,
                 memory: 86.0,
                 ping: "OK",
             },
@@ -160,7 +165,8 @@ export default function Racks() {
                 upt: "317222",
                 cpu: "",
                 os: "Linux",
-                rack: 3,
+                rack_pos: 3,
+                server_pos: 1,
                 memory: "",
                 ping: "NOK",
             },
@@ -170,7 +176,8 @@ export default function Racks() {
                 upt: "317222",
                 cpu: "14",
                 os: "Linux",
-                rack: 3,
+                rack_pos: 3,
+                server_pos: 2,
                 memory: 86.0,
                 ping: "OK",
             },
@@ -180,7 +187,8 @@ export default function Racks() {
                 upt: "317222",
                 cpu: "14",
                 os: "Linux",
-                rack: 3,
+                rack_pos: 3,
+                server_pos: 3,
                 memory: 86.0,
                 ping: "OK",
             },
@@ -224,8 +232,8 @@ export default function Racks() {
             <Container maxWidth="lg" component="main">
                 <Grid container spacing={2}>
                     {racks.map((rack) => {
-                        let tmp = Object.keys(rack[0])[0]
-                        let i = rack[0][tmp].rack;
+                        let tmp = Object.keys(rack[0])[0];
+                        let i = rack[0][tmp].rack_pos;
                         let title = "Rack " + i;
                         i = i + 1;
                         return (
@@ -244,19 +252,25 @@ export default function Racks() {
                                     <CardContent>
                                         <ul>
                                             {rack.map((server) => {
-                                                let pos = 0;
                                                 let ip = Object.keys(server)[0];
-                                                pos = pos + 1;
                                                 let entries = server[ip];
                                                 return (
                                                     <React.Fragment>
                                                         <Server
                                                             // expanded={true}
-                                                            position={pos}
+                                                            position={
+                                                                entries[
+                                                                    "server_pos"
+                                                                ]
+                                                            }
                                                             ip={ip}
                                                             os={entries["os"]}
                                                             cpu={entries["cpu"]}
-                                                            dsk={entries["memory"]}
+                                                            dsk={
+                                                                entries[
+                                                                    "memory"
+                                                                ]
+                                                            }
                                                             ok={entries["ping"]}
                                                         />
                                                     </React.Fragment>

@@ -34,7 +34,7 @@ class MyDaemon(Daemon):
                         for j in ssh_stdout:
                             j = j.split(" ")
                             if j[0] != "" and j[0] != "wtmp":
-                                sshresults[self.inputdata["IP"][i]+':last'] += j[0]
+                                sshresults[self.inputdata["IP"][i]+':last'] += (j[0]+"\n")
 
                     # Show exception on failure
                     except (BadHostKeyException, AuthenticationException,
