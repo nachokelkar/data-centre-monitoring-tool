@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Racks() {
     const classes = useStyles();
     const [racks, setRacks] = useState([]);
+    const [netError, setNeterror] = useState(false);
 
     const fetchSnmp = useCallback(async () => {
         let res = await fetch("http://127.0.0.1:5000/api/v1/snmp", {
@@ -37,171 +38,176 @@ export default function Racks() {
             headers: {
                 "Content-Type": "application/json",
             },
-        }).catch((e) => alert("Network Error"));
-        let data = await res.json();
-        let tmp_rack1 = [];
-        let tmp_rack2 = [];
-        let tmp_rack3 = [];
-        for (var ip in data) {
-            //get ping & ssh data here, append to each data[ip]
-            let pingRes = await fetch(
-                "http://127.0.0.1:5000/api/v1/ping/" + ip,
-                {
-                    mode: "cors",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+        }).catch((e) => setNeterror(true));
+        if (res !== undefined) {
+            setNeterror(false);
+            let data = await res.json();
+            let tmp_rack1 = [];
+            let tmp_rack2 = [];
+            let tmp_rack3 = [];
+            for (var ip in data) {
+                //get ping & ssh data here, append to each data[ip]
+                let pingRes = await fetch(
+                    "http://127.0.0.1:5000/api/v1/ping/" + ip,
+                    {
+                        mode: "cors",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                ).catch((e) => alert("Network Error"));
+                let pingData = await pingRes.json();
+                pingData = pingData.data;
+                let serverStatus;
+                if (pingData === "True") serverStatus = "OK";
+                else serverStatus = "NOK";
+
+                let serverData = data[ip];
+                serverData["ping"] = serverStatus;
+
+                // Rack 1
+                if (serverData["rack_pos"] === "1") {
+                    let server = {};
+                    server[ip] = serverData;
+                    tmp_rack1.push(server);
                 }
-            ).catch((e) => alert("Network Error"));
-            let pingData = await pingRes.json();
-            pingData = pingData.data;
-            let serverStatus;
-            if (pingData === "True") serverStatus = "OK";
-            else serverStatus = "NOK";
+                // Rack 2
+                else if (serverData["rack_pos"] === "2") {
+                    let server = {};
+                    server[ip] = serverData;
+                    tmp_rack2.push(server);
+                }
+                // Rack 3
+                else if (serverData["rack_pos"] === "3") {
+                    let server = {};
+                    server[ip] = serverData;
+                    tmp_rack3.push(server);
+                }
+            }
 
-            let serverData = data[ip];
-            serverData["ping"] = serverStatus;
+            /* dummy data code */
+            tmp_rack1.push({
+                "17.192.60.49": {
+                    upt: "317222",
+                    cpu: "14",
+                    os: "Ubuntu 18.04",
+                    rack_pos: 1,
+                    server_pos: 2,
+                    memory: 86.0,
+                    ping: "OK",
+                },
+            });
+            tmp_rack1.push({
+                "235.206.163.213": {
+                    upt: "317222",
+                    cpu: "14",
+                    os: "Linux",
+                    rack_pos: 1,
+                    server_pos: 3,
+                    memory: 86.0,
+                    ping: "OK",
+                },
+            });
+            tmp_rack1.push({
+                "31.48.70.92": {
+                    upt: "",
+                    cpu: "",
+                    os: "Linux",
+                    rack_pos: 1,
+                    server_pos: 4,
+                    memory: "",
+                    ping: "NOK",
+                },
+            });
+            tmp_rack2.push({
+                "249.8.152.227": {
+                    upt: "317222",
+                    cpu: "14",
+                    os: "Linux",
+                    rack_pos: 2,
+                    server_pos: 1,
+                    memory: 86.0,
+                    ping: "OK",
+                },
+            });
+            tmp_rack2.push({
+                "8.220.11.103": {
+                    upt: "317222",
+                    cpu: "14",
+                    os: "Linux",
+                    rack_pos: 2,
+                    server_pos: 2,
+                    memory: 86.0,
+                    ping: "OK",
+                },
+            });
+            tmp_rack2.push({
+                "38.192.127.154": {
+                    upt: "317222",
+                    cpu: "14",
+                    os: "Linux",
+                    rack_pos: 2,
+                    server_pos: 3,
+                    memory: 86.0,
+                    ping: "OK",
+                },
+            });
+            tmp_rack2.push({
+                "22.74.368.15": {
+                    upt: "317222",
+                    cpu: "14",
+                    os: "Linux",
+                    rack_pos: 2,
+                    server_pos: 4,
+                    memory: 86.0,
+                    ping: "OK",
+                },
+            });
+            tmp_rack3.push({
+                "106.7.151.150": {
+                    upt: "317222",
+                    cpu: "",
+                    os: "Linux",
+                    rack_pos: 3,
+                    server_pos: 1,
+                    memory: "",
+                    ping: "NOK",
+                },
+            });
+            tmp_rack3.push({
+                "174.185.160.163": {
+                    upt: "317222",
+                    cpu: "14",
+                    os: "Linux",
+                    rack_pos: 3,
+                    server_pos: 2,
+                    memory: 86.0,
+                    ping: "OK",
+                },
+            });
+            tmp_rack3.push({
+                "212.74.38.159": {
+                    upt: "317222",
+                    cpu: "14",
+                    os: "Linux",
+                    rack_pos: 3,
+                    server_pos: 3,
+                    memory: 86.0,
+                    ping: "OK",
+                },
+            });
 
-            // Rack 1
-            if (serverData["rack_pos"] === "1") {
-                let server = {};
-                server[ip] = serverData;
-                tmp_rack1.push(server);
-            }
-            // Rack 2
-            else if (serverData["rack_pos"] === "2") {
-                let server = {};
-                server[ip] = serverData;
-                tmp_rack2.push(server);
-            }
-            // Rack 3
-            else if (serverData["rack_pos"] === "3") {
-                let server = {};
-                server[ip] = serverData;
-                tmp_rack3.push(server);
-            }
+            /* end of dummy data code*/
+
+            let tmp_racks = [];
+            tmp_racks.push(tmp_rack1);
+            tmp_racks.push(tmp_rack2);
+            tmp_racks.push(tmp_rack3);
+            // console.log(tmp_racks);
+            setRacks(tmp_racks);
+        } else {
+            setNeterror(true);
         }
-
-        /* dummy data code */
-        tmp_rack1.push({
-            "17.192.60.49": {
-                upt: "317222",
-                cpu: "14",
-                os: "Ubuntu 18.04",
-                rack_pos: 1,
-                server_pos: 2,
-                memory: 86.0,
-                ping: "OK",
-            },
-        });
-        tmp_rack1.push({
-            "235.206.163.213": {
-                upt: "317222",
-                cpu: "14",
-                os: "Linux",
-                rack_pos: 1,
-                server_pos: 3,
-                memory: 86.0,
-                ping: "OK",
-            },
-        });
-        tmp_rack1.push({
-            "31.48.70.92": {
-                upt: "",
-                cpu: "",
-                os: "Linux",
-                rack_pos: 1,
-                server_pos: 4,
-                memory: "",
-                ping: "NOK",
-            },
-        });
-        tmp_rack2.push({
-            "249.8.152.227": {
-                upt: "317222",
-                cpu: "14",
-                os: "Linux",
-                rack_pos: 2,
-                server_pos: 1,
-                memory: 86.0,
-                ping: "OK",
-            },
-        });
-        tmp_rack2.push({
-            "8.220.11.103": {
-                upt: "317222",
-                cpu: "14",
-                os: "Linux",
-                rack_pos: 2,
-                server_pos: 2,
-                memory: 86.0,
-                ping: "OK",
-            },
-        });
-        tmp_rack2.push({
-            "38.192.127.154": {
-                upt: "317222",
-                cpu: "14",
-                os: "Linux",
-                rack_pos: 2,
-                server_pos: 3,
-                memory: 86.0,
-                ping: "OK",
-            },
-        });
-        tmp_rack2.push({
-            "22.74.368.15": {
-                upt: "317222",
-                cpu: "14",
-                os: "Linux",
-                rack_pos: 2,
-                server_pos: 4,
-                memory: 86.0,
-                ping: "OK",
-            },
-        });
-        tmp_rack3.push({
-            "106.7.151.150": {
-                upt: "317222",
-                cpu: "",
-                os: "Linux",
-                rack_pos: 3,
-                server_pos: 1,
-                memory: "",
-                ping: "NOK",
-            },
-        });
-        tmp_rack3.push({
-            "174.185.160.163": {
-                upt: "317222",
-                cpu: "14",
-                os: "Linux",
-                rack_pos: 3,
-                server_pos: 2,
-                memory: 86.0,
-                ping: "OK",
-            },
-        });
-        tmp_rack3.push({
-            "212.74.38.159": {
-                upt: "317222",
-                cpu: "14",
-                os: "Linux",
-                rack_pos: 3,
-                server_pos: 3,
-                memory: 86.0,
-                ping: "OK",
-            },
-        });
-
-        /* end of dummy data code*/
-
-        let tmp_racks = [];
-        tmp_racks.push(tmp_rack1);
-        tmp_racks.push(tmp_rack2);
-        tmp_racks.push(tmp_rack3);
-        // console.log(tmp_racks);
-        setRacks(tmp_racks);
     }, []);
 
     useEffect(() => {
@@ -210,6 +216,7 @@ export default function Racks() {
             fetchSnmp();
         }, 5000);
     }, [fetchSnmp]);
+    if (netError) return <React.Fragment>Network Error</React.Fragment>;
     return (
         <React.Fragment>
             {/* Hero unit */}
