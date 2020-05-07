@@ -8,26 +8,25 @@ A basic tool to monitor the network and servers in a data centre.
 * Checks and stores memory utilisation
 * Checks and stores disk utilisation
 * Checks and stores uptime
+* Finds last 5 logged in users
 
 ## Initial setup for inputs
-Inputs must be in `backend/inputs.txt` in the following format:
-* Frequency of updates (in seconds) must be on Line 6
-* Allowed timeout for pinging and SSH (in seconds) must be on Line 7
-* IP addresses and other details must be in the following format starting on Line 8:
-  * IP address on the first line
-  * SSH username on the second line
-  * SSH password on the third line
-  * Empty line
+* Inputs must be in `backend/inputs.xlsx`
+* Column names "IP", "Rack_number", "Username", "Password" must not be changed.
+* "IP" should *always* be the first column
+* Make sure there are absolutely no errors in the addresses.\
+We have done as much error handling as possible, there might be unhandled cases.
+
+
 
 ---
 ## Backend
 ```sh
-cd backend
+$ cd backend
 ```
 
 
 ### Initial setup for database
-The database must be set up according to the IP addresses.\
 HBase must be installed (https://hbase.apache.org/book.html#quickstart).\
 To initialise the tables
 ```sh
@@ -37,7 +36,8 @@ To clear the tables
 ```sh
 $ python util/table_clr.py
 ```
-Once that is done, run `util/table_init.py` to create the tables and `util/table_clr.py` to delete tables.
+The application does not initialise or clear tables by itself.\
+Before running, make sure tables are initialised.
 
 ### Usage
 * Create input file `input.txt` as above
@@ -47,7 +47,7 @@ Once that is done, run `util/table_init.py` to create the tables and `util/table
 (In HBase folder, `$ bin/hbase-daemon.sh start thrift -p 9090`)
 * To start daemon processes,
   ```sh
-  $ daemon/dcmt.sh start
+  $ daemon/dcmt.sh start [timeout] [ping and ssh update freq] [snmp update freq]
   ```
 * To stop daemon processes,
   ```sh
@@ -64,9 +64,22 @@ Once that is done, run `util/table_init.py` to create the tables and `util/table
 * Outputs are stored as in tables `'snmp'`, `'ping'` and `'ssh'` in HBase
 * Daemon output and errors stored in `daemon/dumps`
 
-> ### Note on daemon files
-> Change pidfile, output, error file paths for every new daemon python created.\
-  This is done by changing the first parameter passed in the constructor function in `__main__`
+
+
+---
+## Frontend
+```sh
+$ cd frontend
+```
+
+### To run 
+```sh
+$ yarn
+$ yarn start
+```
+---
+
+
 
 ### To-do
 * Last logged in (user, time)
@@ -75,13 +88,3 @@ Once that is done, run `util/table_init.py` to create the tables and `util/table
 * Check out front-end
 * Check switch, router health (1)
 * Display log files (head, tail, entire file)
----
-## Frontend
-
-### To run 
-```sh
-$ yarn
-$ yarn start
-```
-
-

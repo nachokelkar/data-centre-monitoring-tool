@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import sys, os, time, atexit
-from signal import SIGTERM 
+from signal import SIGTERM
+import openpyxl as xl
 
 class Daemon:
 	# Generic daemon class
@@ -12,6 +13,31 @@ class Daemon:
 		self.stdout = stdout
 		self.stderr = stderr
 		self.pidfile = pidfile
+		self.inputdata = dict()
+
+		# Input data is taken from input.xlsx
+		# wb holds the Workbook
+		# ws holds the current Sheet
+		# cols and rows are a list of column and row coordinates
+		wb = xl.load_workbook(os.path.join(sys.path[0], '../input.xlsx'))
+		ws = wb.active
+		cols = list(map(chr, range(65, 65 + ws.max_column)))
+		rows = list(map(str, range(2, ws.max_row + 1)))
+
+		# Initialise an empty list for every column
+		for c in cols:
+			self.inputdata[str(ws[c +"1"].value).strip()] = list()
+		
+		# Go through the table
+		# Append value of every cell to it's column
+		for c in cols:
+			for r in rows:
+				self.inputdata[str(ws[c +"1"].value).strip()].append(str(ws[c + r].value).strip())
+		
+		# inputdata now has:
+		# keys = columns of input Excel sheet
+		# values = list of values of each cell under that column
+		wb.close()
 	
 	def daemonize(self):
 		try: 
@@ -56,7 +82,11 @@ class Daemon:
 	def delpid(self):
 		os.remove(self.pidfile)
 
-	def start(self):
+	def start(self, timeout=5, upfreqsnmp=15, upfreqping=5):
+		self.timeout = int(timeout)
+		self.upfreqping = int(upfreqping)
+		self.upfreqsnmp = int(upfreqsnmp)
+		
 		'''
 		Start the daemon
 		'''

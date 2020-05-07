@@ -3,45 +3,25 @@ import sys
 import time
 import os
 from daemon import Daemon
-import happybase
 
 
 class MyDaemon(Daemon):
     def run(self):
-        # All input is read from an input file
-        # Format of the file is specified in the file itself
-        inputfile = open(os.path.join(sys.path[0], '../input.txt'), 'r')
-
-        ips = list()  # Stores list of IP addresses
-
-        for i, line in enumerate(inputfile):
-            # i = lineno - 1
-            if i == 5:  # Line 6 contains update frequency for the data
-                updatefreq = int(line.strip())
-            elif i == 6:  # Line 7 contains timeout for the ping
-                # Timeout is set as a string and not converted to an int because it isn't required
-                timeout = line.strip()
-            elif i >= 8 and i % 5 == 3:  # Each line with lineno%5==4 contains an IP address
-                # Stripping is done to remove trailing newlines
-                ips.append(line.strip())
-                
-        inputfile.close()
-
         # Initialising HBase connection
         conn = happybase.Connection('localhost', port=9090)
         table = conn.table('ping')
 
         while True:
-            if ips:  # Run only if there are IP addresses in the file
+            if self.inputdata["IP"]:  # Run only if there are IP addresses in the file
                 pingresults = dict()  # Stores results of the ping test
 
-                for i in ips:
+                for i in range(len(self.inputdata["IP"])):
                     # Running ping command
                     # response will hold 0 if successful, something else if it fails
-                    pingresponse = os.system('ping -c 1 -w ' + timeout + ' ' + i)
+                    pingresponse = os.system('ping -c 1 -w ' +str(self.timeout) + ' ' + self.inputdata["IP"][i])
                     
                     # Adds result to the ping command
-                    pingresults[i.strip()+":ping"] = str(pingresponse == 0)
+                    pingresults[self.inputdata["IP"][i].strip()+":ping"] = str(pingresponse == 0)
 
                 # Deleting previous output, putting new output into the database
                 # Key = 'row', Value = 'pingresults'
@@ -51,7 +31,7 @@ class MyDaemon(Daemon):
                 conn.close()
 
                 # Delay
-                time.sleep(updatefreq)
+                time.sleep(self.upfreqping)
 
             else:  # If no input is detected
                 print('No input detected')
@@ -60,10 +40,12 @@ class MyDaemon(Daemon):
 
 if __name__ == '__main__':
     daemon = MyDaemon('/tmp/daemon2.pid', stderr=os.path.join(sys.path[0], 'dumps/pingerrors.txt'), stdout=os.path.join(sys.path[0], 'dumps/pingoutput.txt'))
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 4 or len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
-            daemon.start()
+            print("Starting ping daemon")
+            daemon.start(timeout=sys.argv[2], upfreqping=sys.argv[3])
         elif 'stop' == sys.argv[1]:
+            print("Stopping ping daemon")
             daemon.stop()
         elif 'restart' == sys.argv[1]:
             daemon.restart()
