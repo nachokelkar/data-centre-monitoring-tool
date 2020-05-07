@@ -1,12 +1,40 @@
 from flask import Flask, render_template, request, json, url_for, send_file
+import sys
 import os
 import happybase
+import openpyxl as xl
 from datetime import datetime
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'secret'
+
+
+def getPhysicalPosition(ip_addr):
+    print(os.path.join(sys.path[0], 'input.xlsx'))
+    wb = xl.load_workbook(os.path.join(sys.path[0], 'input.xlsx'))
+    ws = wb.active
+    cols = list(map(chr, range(65, 65 + ws.max_column)))
+    rows = list(map(str, range(2, ws.max_row + 1)))
+    inputdata = dict()
+
+    for c in cols:
+        inputdata[str(ws[c + "1"].value).strip()] = list()
+    for c in cols:
+        for r in rows:
+            inputdata[str(ws[c + "1"].value).strip()
+                      ].append(str(ws[c + r].value).strip())
+
+    for i in range(len(inputdata["IP"])):
+        if(inputdata["IP"][i] == ip_addr):
+            rack_number = inputdata["Rack_number"][i]
+            server_position = inputdata["System_number"][i]
+            wb.close()
+            return [rack_number, server_position]
+    return []
+
+            
 
 
 def to_string(data):
@@ -41,7 +69,9 @@ def get_snmp():
             ip_addr = key.split(':')[0]
             if(ip_addr not in response.keys()):
                 response[ip_addr] = {}
-                response[ip_addr]["rack"] = 1
+                position = getPhysicalPosition(ip_addr)
+                response[ip_addr]["rack_pos"] = position[0]
+                response[ip_addr]["server_pos"] = position[1]
 
             if(key.split(':')[1] == 'cpu'):
                 tmp = to_list(value)
@@ -67,7 +97,6 @@ def get_snmp():
             # print(x, data[-1][x])
             # print('\n\n\n')
 
-            print(response)
         '''
             Response format {ip_addr1: [rack_no, cpu_data, dsk_data, mem_data, os, upt], ...}
         '''
