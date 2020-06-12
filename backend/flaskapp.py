@@ -56,9 +56,6 @@ def get_snmp():
         conn.open()
 
         data = [data for (key, data) in table.scan(row_start=row_key)]
-        for i in data:
-            print(i)
-            print('\n')
         conn.close()
 
         response = {}

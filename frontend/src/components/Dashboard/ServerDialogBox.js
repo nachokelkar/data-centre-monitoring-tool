@@ -191,7 +191,7 @@ export default function SimpleDialog(props) {
                         Disk(%): {props.dsk}
                     </Typography> */}
                     <Grid item xs={12}>
-                        <PieChart width={600} height={150}>
+                        <PieChart width={600} height={200}>
                             <Pie
                                 activeIndex={activeIndex}
                                 activeShape={renderActiveShape}
