@@ -56,6 +56,9 @@ def get_snmp():
         conn.open()
 
         data = [data for (key, data) in table.scan(row_start=row_key)]
+        for i in data:
+            print(i)
+            print('\n')
         conn.close()
 
         response = {}
@@ -90,12 +93,12 @@ def get_snmp():
                 tmp = value.split()[0]
                 response[ip_addr]["os"] = tmp
             elif(key.split(':')[1] == 'upt'):
-                response[ip_addr]["upt"] = value
+                response[ip_addr]["upt"] = str(float(value)/60)
             # print(x, data[-1][x])
             # print('\n\n\n')
 
         '''
-            Response format {ip_addr1: [rack_no, cpu_data, dsk_data, mem_data, os, upt], ...}
+            Response format {ip_addr1: [rack_no, cpu_data, dsk_data(physical mem), mem_data, os, upt], ...}
         '''
         return json.dumps(response), 200, {'ContentType': 'application/json'}
     except:

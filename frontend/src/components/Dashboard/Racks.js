@@ -261,6 +261,7 @@ export default function Racks() {
                                             {rack.map((server) => {
                                                 let ip = Object.keys(server)[0];
                                                 let entries = server[ip];
+                                                console.log(entries)
                                                 return (
                                                     <React.Fragment>
                                                         <Server
@@ -278,6 +279,7 @@ export default function Racks() {
                                                                     "memory"
                                                                 ]
                                                             }
+                                                            upt = {entries["upt"]}
                                                             ok={entries["ping"]}
                                                         />
                                                     </React.Fragment>

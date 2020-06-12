@@ -164,6 +164,7 @@ export default function Racks(props) {
                 cpu={props.cpu}
                 dsk={props.dsk}
                 ping={props.ok}
+                upt={props.upt}
             />
         </React.Fragment>
     );
