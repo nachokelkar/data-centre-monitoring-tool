@@ -15,9 +15,10 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
     paper: {
         // height: 520,
-        width: 535,
+        // width: 535,
         paddingTop: theme.spacing(0),
         paddingLeft: theme.spacing(2),
+        margin: theme.spacing(2),
         // marginBottom: theme.spacing(2),
     },
     paperHeading: {
@@ -27,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(3),
         marginTop: theme.spacing(0),
     },
+    serverInfo: {
+        margin: theme.spacing(2),
+    },
     metrics: {
         paddingLeft: theme.spacing(3),
     },
@@ -35,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
         color: "white",
         padding: theme.spacing(2),
         marginTop: theme.spacing(3),
-        width: 300,
+        width: 400,
     },
 }));
 
@@ -159,9 +163,57 @@ export default function SimpleDialog(props) {
             aria-labelledby="simple-dialog-title"
             open={open}
         >
-            <DialogTitle id="simple-dialog-title">
-                Server Info ({props.ip})
-            </DialogTitle>
+            <DialogTitle id="simple-dialog-title">Server Info</DialogTitle>
+            <Grid item xs={12}>
+                <Paper className={classes.serverInfo}>
+                    <Typography variant="subtitle1" className={classes.metrics}>
+                        <Typography
+                            variant="caption"
+                            className={classes.metrics}
+                        >
+                            {" "}
+                            Operating System:{" "}
+                        </Typography>
+                        {props.os}
+                    </Typography>
+                    <Typography variant="subtitle1" className={classes.metrics}>
+                        <Typography
+                            variant="caption"
+                            className={classes.metrics}
+                        >
+                            IP Address:{" "}
+                        </Typography>
+                        {props.ip}
+                    </Typography>
+                    <Typography variant="subtitle1" className={classes.metrics}>
+                        <Typography
+                            variant="caption"
+                            className={classes.metrics}
+                        >
+                            Server Uptime: {" "} 
+                        </Typography>
+                        {props.upt} minutes
+                    </Typography>
+                    <Typography variant="subtitle1" className={classes.metrics}>
+                        <Typography
+                            variant="caption"
+                            className={classes.metrics}
+                        >
+                            Virtual memory utilization: {" "} 
+                        </Typography>
+                        {props.virtual_mem}%
+                    </Typography>
+                    <Typography variant="subtitle1" className={classes.metrics}>
+                        <Typography
+                            variant="caption"
+                            className={classes.metrics}
+                        >
+                            Memory Buffers Utilization: {" "} 
+                        </Typography>
+                        {props.mem_buffers}%
+                    </Typography>
+                </Paper>
+            </Grid>
             <Paper className={classes.paper}>
                 {/* <Grid item xs={12}>
                     <Typography variant="h6" className={classes.paperHeading}>
@@ -191,7 +243,7 @@ export default function SimpleDialog(props) {
                         Disk(%): {props.dsk}
                     </Typography> */}
                     <Grid item xs={12}>
-                        <PieChart width={600} height={200}>
+                        <PieChart width={600} height={175}>
                             <Pie
                                 activeIndex={activeIndex}
                                 activeShape={renderActiveShape}
@@ -206,29 +258,54 @@ export default function SimpleDialog(props) {
                         </PieChart>
                     </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                    <Paper className={classes.info}>
-                        <Typography
-                            variant="subtitle1"
-                            className={classes.metrics}
-                        >
-                            Ping Status:
+                <Paper className={classes.info}>
+                    <Grid container>
+                        <Grid xs={6}>
                             <Typography
-                                variant="h6"
+                                variant="subtitle1"
                                 className={classes.metrics}
-                                color={props.ping==="OK" ? "secondary" : "error"}
                             >
-                                {props.ping}
+                                Ping Status
+                                <Typography
+                                    variant="h6"
+                                    className={classes.metrics}
+                                    color={
+                                        props.ping === "OK"
+                                            ? "secondary"
+                                            : "error"
+                                    }
+                                >
+                                    {props.ping}
+                                </Typography>
                             </Typography>
-                        </Typography>
+                        </Grid>
+                        <Grid xs={6}>
+                            <Typography
+                                variant="subtitle1"
+                                className={classes.metrics}
+                            >
+                                SSH Status
+                                <Typography
+                                    variant="h6"
+                                    className={classes.metrics}
+                                    color={
+                                        props.ping === "OK"
+                                            ? "secondary"
+                                            : "error"
+                                    }
+                                >
+                                    {props.ping}
+                                </Typography>
+                            </Typography>
+                        </Grid>
                         {/* <Typography
                             variant="subtitle1"
                             className={classes.metrics}
                         >
                             Uptime: {props.upt} s
                         </Typography> */}
-                    </Paper>
-                </Grid>
+                    </Grid>
+                </Paper>
                 {hasFetchedUsers ? (
                     <Grid item>
                         <Typography

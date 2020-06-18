@@ -77,25 +77,39 @@ def get_snmp():
 
             elif(key.split(':')[1] == 'disk'):
                 tmp = value.strip('[]').split('), ')
-                tmp = to_list(tmp[0])
+                physical_mem = to_list(tmp[0])
+                virtual_mem = to_list(tmp[1])
+                mem_buffers = to_list(tmp[2])
                 # used physical space / total physical space *100
-                perc = round((float(tmp[3])/float(tmp[2]))*100)
+                perc = round((float(physical_mem[3])/float(physical_mem[2]))*100)
                 response[ip_addr]["disk"] = perc
+
+                # used virtual mem / total virtual mem *100
+                perc = round((float(virtual_mem[3])/float(virtual_mem[2]))*100)
+                response[ip_addr]["virtual_mem"] = perc
+
+                # used memory buffer / total memory buffer *100
+                perc = round((float(mem_buffers[3])/float(mem_buffers[2]))*100)
+                response[ip_addr]["mem_buffers"] = perc
+
             elif(key.split(':')[1] == 'memory'):
                 tmp = to_list(value)
                 # used swap space / total swap space *100
                 perc = round((float(tmp[1]) / float(tmp[0]))*100)
                 response[ip_addr]["memory"] = perc
             elif(key.split(':')[1] == 'os'):
-                tmp = value.split()[0]
-                response[ip_addr]["os"] = tmp
+                os = value.split()[0]
+                full_os = " ".join(value.split()[:3])
+                response[ip_addr]["os"] = os
+                response[ip_addr]["full_os"] = full_os
             elif(key.split(':')[1] == 'upt'):
-                response[ip_addr]["upt"] = str(float(value)/60)
+                uptime = float(value)/3600
+                response[ip_addr]["upt"] = str(round(uptime))
             # print(x, data[-1][x])
             # print('\n\n\n')
 
         '''
-            Response format {ip_addr1: [rack_no, cpu_data, dsk_data(physical mem), mem_data, os, upt], ...}
+            Response format {'<ipAddr>': {'rack_pos': '1', 'server_pos': '1', 'cpu': '15', 'disk': 97, 'memory': 92, 'os': 'Linux', 'full_os': 'Linux rrk-lenovo 5.3.0-53-generic #47~18.04.1-Ubuntu SMP Thu May 7 13:10:50 UTC 2020 x86_64', 'upt': '506'}}
         '''
         return json.dumps(response), 200, {'ContentType': 'application/json'}
     except:

@@ -165,6 +165,9 @@ export default function Racks(props) {
                 dsk={props.dsk}
                 ping={props.ok}
                 upt={props.upt}
+                os={props.full_os}
+                virtual_mem={props.virtual_mem}
+                mem_buffers={props.mem_buffers}
             />
         </React.Fragment>
     );
