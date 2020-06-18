@@ -122,7 +122,7 @@ export default function Racks(props) {
                                 </Typography>
                                 <Typography variant="h6">
                                     {" "}
-                                    {props.cpu === undefined
+                                    {props.cpu === undefined || props.cpu === ""
                                         ? "-"
                                         : props.cpu}{" "}
                                 </Typography>
@@ -133,7 +133,7 @@ export default function Racks(props) {
                                 </Typography>
                                 <Typography variant="h6">
                                     {" "}
-                                    {props.dsk === undefined
+                                    {props.dsk === undefined || props.dsk === ""
                                         ? "-"
                                         : props.dsk}{" "}
                                 </Typography>

@@ -94,8 +94,10 @@ export default function Racks() {
                     full_os: "Ubuntu 18.04",
                     rack_pos: 1,
                     server_pos: 2,
-                    memory: 86.0,
+                    disk: 86.0,
                     ping: "OK",
+                    virtual_mem:76,
+                    mem_buffers:4
                 },
             });
             tmp_rack1.push({
@@ -106,8 +108,10 @@ export default function Racks() {
                     full_os: "Linux rrk-lenovo 5.3.0-53-generic #47~18.04.1-Ubuntu SMP Thu May 7 13:10:50 UTC 2020 x86_64",
                     rack_pos: 1,
                     server_pos: 3,
-                    memory: 86.0,
+                    disk: 86.0,
                     ping: "OK",
+                    virtual_mem:76,
+                    mem_buffers:4
                 },
             });
             tmp_rack1.push({
@@ -118,7 +122,7 @@ export default function Racks() {
                     full_os: "Linux pranav-lenovo 5.3.0-53-generic #47~18.04.1-Ubuntu SMP Thu May 7 13:10:50 UTC 2020 x86_64",
                     rack_pos: 1,
                     server_pos: 4,
-                    memory: "",
+                    disk: "",
                     ping: "NOK",
                 },
             });
@@ -130,8 +134,10 @@ export default function Racks() {
                     full_os: "Linux",
                     rack_pos: 2,
                     server_pos: 1,
-                    memory: 86.0,
+                    disk: 86.0,
                     ping: "OK",
+                    virtual_mem:76,
+                    mem_buffers:4
                 },
             });
             tmp_rack2.push({
@@ -142,8 +148,10 @@ export default function Racks() {
                     full_os: "Linux",
                     rack_pos: 2,
                     server_pos: 2,
-                    memory: 86.0,
+                    disk: 86.0,
                     ping: "OK",
+                    virtual_mem:76,
+                    mem_buffers:4
                 },
             });
             tmp_rack2.push({
@@ -154,8 +162,10 @@ export default function Racks() {
                     full_os: "Linux",
                     rack_pos: 2,
                     server_pos: 3,
-                    memory: 86.0,
+                    disk: 86.0,
                     ping: "OK",
+                    virtual_mem:76,
+                    mem_buffers:4
                 },
             });
             tmp_rack2.push({
@@ -166,19 +176,21 @@ export default function Racks() {
                     full_os: "Linux",
                     rack_pos: 2,
                     server_pos: 4,
-                    memory: 86.0,
+                    disk: 86.0,
                     ping: "OK",
+                    virtual_mem:76,
+                    mem_buffers:4
                 },
             });
             tmp_rack3.push({
                 "106.7.151.150": {
                     upt: "317222",
-                    cpu: "45",
+                    cpu: "",
                     os: "Linux",
                     full_os: "Linux",
                     rack_pos: 3,
                     server_pos: 1,
-                    memory: "",
+                    disk: "",
                     ping: "NOK",
                 },
             });
@@ -190,8 +202,10 @@ export default function Racks() {
                     full_os: "Linux",
                     rack_pos: 3,
                     server_pos: 2,
-                    memory: 86.0,
+                    disk: 86.0,
                     ping: "OK",
+                    virtual_mem:76,
+                    mem_buffers:4
                 },
             });
             tmp_rack3.push({
@@ -202,8 +216,10 @@ export default function Racks() {
                     full_os: "Linux",
                     rack_pos: 3,
                     server_pos: 3,
-                    memory: 86.0,
+                    disk: 86.0,
                     ping: "OK",
+                    virtual_mem:76,
+                    mem_buffers:4
                 },
             });
 
