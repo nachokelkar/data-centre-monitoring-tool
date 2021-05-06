@@ -4,7 +4,7 @@
 Flask == 1.0.2
 
 # backend/flaskapp.py: 6
-Flask_Cors == 3.0.8
+Flask_Cors == 3.0.9
 
 # backend/daemon/pingdaemon.py: 1,6
 # backend/flaskapp.py: 4
